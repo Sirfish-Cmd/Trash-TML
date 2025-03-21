@@ -1,0 +1,74 @@
+body {
+    background-image: url(national-cancer-institute-w7Pby5bDKW4-unsplash.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    margin: 0;
+}
+
+#con {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 30px;
+    border: 5px solid;
+    border-radius: 50px;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.1); /* Add a subtle background to make the content stand out */
+    backdrop-filter: blur(10px); /* Ensure the background blur applies properly */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Add a shadow for depth */
+}
+
+#clock {
+    font-family: 'Courier New', monospace;
+    font-size: 6.5rem;
+    font-weight: bold;
+    text-align: center;
+    color: aliceblue;
+    background-color: hsla(34, 78%, 91%, 0.188);
+    width: 100%;
+    max-width:max-content;
+    padding: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3); /* Add a border to match the theme */
+    border-radius: 25px; /* More rounded edge */
+    margin-bottom: 20px; /* Space between clock and buttons */
+}
+
+button {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 10px 20px;
+    margin: 5px;
+    min-width: 125px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.5s ease;
+    color: #fff; /* Make text color white for better contrast */
+}
+
+#start {
+    background-color: hsl(120, 100%, 40%);
+}
+
+#start:hover {
+    background-color: hsl(120, 100%, 30%);
+}
+
+#stop {
+    background-color: hsl(10, 90%, 50%);
+}
+
+#stop:hover {
+    background-color: hsl(10, 90%, 40%);
+}
+
+#reset {
+    background-color: hsl(210, 100%, 50%);
+}
+
+#reset:hover {
+    background-color: hsl(210, 100%, 40%);
+}

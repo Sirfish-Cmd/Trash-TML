@@ -1,0 +1,56 @@
+/* Reset margin and padding for all elements */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.slider {
+    position: relative;
+    width: 100%;
+    margin: auto;
+    overflow: hidden;
+}
+
+.slider img {
+    width: 100%;
+    height: 400px; /* Adjust to your desired height */
+    object-fit: cover; /* Ensures the center of the image is displayed */
+    display: none;
+}
+
+img.displayslide {
+    animation-name: fade;
+    animation-duration: 1.5s;
+    display: block;
+}
+
+.slider button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    background-color: rgba(255, 192, 203, 0.516); /* Transparent background */
+    color: aliceblue;
+    border: none;
+    cursor: pointer;
+    padding: 10px 15px;
+    opacity: 0.75; /* Transparency setting for the button */
+}
+
+.slider button:hover {
+    opacity: 1; /* Remove transparency on hover */
+}
+
+.prevslide {
+    left: 0;
+}
+
+.next {
+    right: 0;
+}
+
+@keyframes fade {
+    from { opacity: 0.5; }
+    to { opacity: 1; }
+}

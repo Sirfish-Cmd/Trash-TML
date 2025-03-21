@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clue Board Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 20px 0;
+        }
+
+        #board {
+            display: grid;
+            grid-template-columns: repeat(5, 100px);
+            grid-template-rows: repeat(5, 100px);
+            gap: 5px;
+            justify-content: center;
+            margin: 20px auto;
+            border: 2px solid black;
+            width: 520px;
+            height: 520px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid black;
+            font-size: 14px;
+            font-weight: bold;
+            box-sizing: border-box;
+        }
+
+        .room {
+            background-color: #d6d6f5;
+        }
+
+        .hallway {
+            background-color: #f5d6d6;
+        }
+
+        #controls {
+            margin-top: 20px;
+        }
+
+        button {
+            font-size: 16px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #message {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Clue Board Game</h1>
+    <div id="board"></div>
+    <div id="controls">
+        <button id="roll-dice">Roll Dice</button>
+        <button id="make-suggestion">Make Suggestion</button>
+        <button id="make-accusation">Make Accusation</button>
+    </div>
+    <p id="message">Welcome to Clue! Roll the dice to start.</p>
+
+    <script>
+        const board = document.getElementById('board');
+        const message = document.getElementById('message');
+        const rollDiceButton = document.getElementById('roll-dice');
+
+        // Rooms and positions for the board
+        const boardLayout = [
+            ['Study', 'Hallway', 'Hall', 'Hallway', 'Lounge'],
+            ['Hallway', '', 'Hallway', '', 'Hallway'],
+            ['Library', 'Hallway', 'Billiard Room', 'Hallway', 'Dining Room'],
+            ['Hallway', '', 'Hallway', '', 'Hallway'],
+            ['Conservatory', 'Hallway', 'Ballroom', 'Hallway', 'Kitchen']
+        ];
+
+        function createBoard() {
+            for (let row = 0; row < 5; row++) {
+                for (let col = 0; col < 5; col++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    if (boardLayout[row][col] !== '') {
+                        cell.classList.add('room');
+                        cell.textContent = boardLayout[row][col];
+                    } else {
+                        cell.classList.add('hallway');
+                    }
+                    board.appendChild(cell);
+                }
+            }
+        }
+
+        // Roll Dice Logic
+        rollDiceButton.addEventListener('click', () => {
+            const diceRoll = Math.floor(Math.random() * 6) + 1;
+            message.textContent = `You rolled a ${diceRoll}! Move your piece.`;
+        });
+
+        createBoard();
+    </script>
+    <script>
+    const express = require('express');
+    const http = require('http');
+    const { Server } = require('socket.io');
+    
+    const app = express();
+    const server = http.createServer(app);
+    const io = new Server(server);
+    
+    let players = [];
+    let currentPlayerIndex = 0;
+    
+    // Serve static files
+    app.use(express.static('public'));
+    
+    // Handle player connections
+    io.on('connection', (socket) => {
+        console.log('A player connected:', socket.id);
+    
+        if (players.length < 6) {
+            players.push({ id: socket.id, name: `Player ${players.length + 1}` });
+            socket.emit('welcome', { players, playerId: socket.id });
+        } else {
+            socket.emit('full', { message: 'Game room is full!' });
+        }
+    
+        // Broadcast moves
+        socket.on('move', (data) => {
+            io.emit('update-move', data);
+        });
+    
+        // Disconnect event
+        socket.on('disconnect', () => {
+            console.log('Player disconnected:', socket.id);
+            players = players.filter(player => player.id !== socket.id);
+        });
+    });
+    
+    server.listen(3000, () => {
+        console.log('Server is running on http://localhost:3000');
+    });
+    </script>
+</body>
+</html>

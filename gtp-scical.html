@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ultimate Scientific Calculator</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #1e1e2e, #3a3a4d);
+      font-family: Arial, sans-serif;
+    }
+    .calculator {
+      background: #2c2c3a;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      max-width: 400px;
+      transition: transform 0.2s ease-in-out;
+    }
+    .calculator:hover {
+      transform: scale(1.05);
+    }
+    input {
+      width: 100%;
+      height: 60px;
+      text-align: right;
+      font-size: 28px;
+      background: #3a3a4d;
+      color: #fff;
+      border: none;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 5px;
+      outline: none;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+    button {
+      background: #565676;
+      color: white;
+      border: none;
+      padding: 18px;
+      font-size: 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #6c6c96;
+    }
+    .equal { background: #ff9500; }
+    .equal:hover { background: #e08900; }
+    .clear { background: #ff3b30; }
+    .clear:hover { background: #e02e25; }
+  </style>
+</head>
+<body>
+<div class="calculator">
+  <input type="text" id="display" disabled>
+  <div class="buttons">
+    <button onclick="clearDisplay()" class="clear">C</button>
+    <button onclick="deleteLast()">⌫</button>
+    <button onclick="appendValue('(')">(</button>
+    <button onclick="appendValue(')')">)</button>
+    <button onclick="appendValue('/')">÷</button>
+
+    <button onclick="appendValue('7')">7</button>
+    <button onclick="appendValue('8')">8</button>
+    <button onclick="appendValue('9')">9</button>
+    <button onclick="appendValue('*')">×</button>
+    <button onclick="appendValue('%')">%</button>
+
+    <button onclick="appendValue('4')">4</button>
+    <button onclick="appendValue('5')">5</button>
+    <button onclick="appendValue('6')">6</button>
+    <button onclick="appendValue('-')">−</button>
+    <button onclick="appendValue('Math.pow(')">xʸ</button>
+
+    <button onclick="appendValue('1')">1</button>
+    <button onclick="appendValue('2')">2</button>
+    <button onclick="appendValue('3')">3</button>
+    <button onclick="appendValue('+')">+</button>
+    <button onclick="appendValue('Math.sqrt(')">√</button>
+
+    <button onclick="appendValue('0')">0</button>
+    <button onclick="appendValue('.')">.</button>
+    <button onclick="calculate()" class="equal">=</button>
+    <button onclick="appendValue('Math.PI')">π</button>
+    <button onclick="appendValue('Math.E')">e</button>
+
+    <button onclick="appendValue('Math.sin(')">sin</button>
+    <button onclick="appendValue('Math.cos(')">cos</button>
+    <button onclick="appendValue('Math.tan(')">tan</button>
+    <button onclick="appendValue('Math.log10(')">log</button>
+    <button onclick="appendValue('Math.log(')">ln</button>
+  </div>
+</div>
+
+<script>
+  function appendValue(value) {
+    document.getElementById("display").value += value;
+  }
+  function clearDisplay() {
+    document.getElementById("display").value = "";
+  }
+  function deleteLast() {
+    let display = document.getElementById("display");
+    display.value = display.value.slice(0, -1);
+  }
+  function calculate() {
+    try {
+      let result = eval(document.getElementById("display").value);
+      document.getElementById("display").value = result;
+    } catch (error) {
+      document.getElementById("display").value = "Error";
+    }
+  }
+  document.addEventListener("keydown", function(event) {
+    let key = event.key;
+    if (!isNaN(key) || "+-*/().".includes(key)) {
+      appendValue(key);
+    } else if (key === "Enter") {
+      calculate();
+    } else if (key === "Backspace") {
+      deleteLast();
+    }
+  });
+</script>
+</body>
+</html>

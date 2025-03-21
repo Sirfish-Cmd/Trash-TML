@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eBay Replica</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Slick Carousel for product sliders -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <style>
+        .category-icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto;
+        }
+        .search-suggestions {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+        }
+        .search-active .search-suggestions {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <!-- Top Navigation -->
+        <div class="container mx-auto px-4 py-2">
+            <div class="flex justify-between items-center">
+                <!-- Left Section -->
+                <div class="flex items-center space-x-6">
+                    <a href="#" class="flex items-center">
+                        <img src="/api/placeholder/120/50" alt="eBay Logo" class="h-10">
+                    </a>
+                    
+                    <!-- Search Bar -->
+                    <div class="relative flex-grow max-w-3xl" id="searchContainer">
+                        <div class="flex">
+                            <div class="relative flex-grow">
+                                <input type="text" placeholder="Search for anything" class="w-full px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <div class="search-suggestions bg-white border border-gray-300 rounded-b-md shadow-lg">
+                                    <div class="p-2 hover:bg-gray-100 cursor-pointer">iPhone 13</div>
+                                    <div class="p-2 hover:bg-gray-100 cursor-pointer">PlayStation 5</div>
+                                    <div class="p-2 hover:bg-gray-100 cursor-pointer">Nintendo Switch</div>
+                                    <div class="p-2 hover:bg-gray-100 cursor-pointer">Laptop</div>
+                                </div>
+                            </div>
+                            <div class="relative inline-block text-left">
+                                <select class="h-full px-4 py-2 bg-gray-100 border border-gray-300 focus:outline-none" 
+                                        aria-label="Category selection">
+                                    <option>All Categories</option>
+                                    <option>Electronics</option>
+                                    <option>Fashion</option>
+                                    <option>Home & Garden</option>
+                                    <option>Sporting Goods</option>
+                                </select>
+                            </div>
+                            <button class="bg-blue-600 text-white px-6 py-2 rounded-r-md hover:bg-blue-700 focus:outline-none"
+                                    aria-label="Search">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Section -->
+                <div class="flex items-center space-x-6">
+                    <div class="hidden md:flex items-center space-x-4">
+                        <a href="#" class="text-gray-700 hover:text-blue-600">
+                            <i class="far fa-heart"></i>
+                            <span class="ml-1">Watchlist</span>
+                        </a>
+                        <a href="#" class="text-gray-700 hover:text-blue-600">
+                            <i class="fas fa-box"></i>
+                            <span class="ml-1">My eBay</span>
+                        </a>
+                        <a href="#" class="text-gray-700 hover:text-blue-600">
+                            <i class="far fa-bell"></i>
+                            <span class="ml-1">Notifications</span>
+                        </a>
+                        <a href="#" class="text-gray-700 hover:text-blue-600">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="ml-1">Cart</span>
+                        </a>
+                    </div>
+                    <div class="md:hidden">
+                        <button class="text-gray-700 hover:text-blue-600"
+                                aria-label="Open menu">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Categories Navigation -->
+        <nav class="border-t border-gray-200">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between py-2">
+                    <ul class="flex space-x-6 overflow-x-auto text-sm whitespace-nowrap">
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Home</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Saved</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Electronics</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Fashion</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Health & Beauty</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Home & Garden</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Sports</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Toys</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Business & Industrial</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Motors</a></li>
+                    </ul>
+                    <div>
+                        <a href="#" class="text-blue-600 hover:underline flex items-center">
+                            <i class="fas fa-plus mr-1"></i> Sell
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-6">
+        <!-- Hero Banner -->
+        <div class="rounded-lg overflow-hidden mb-8">
+            <div class="relative">
+                <img src="https://source.unsplash.com/1200x300/?shopping" alt="Special Offer" class="w-full">
+                <div class="absolute inset-0 flex items-center p-8 bg-gradient-to-r from-gray-900/70 to-transparent">
+                    <div class="max-w-md text-white">
+                        <h2 class="text-3xl font-bold mb-2">Up to 70% off</h2>
+                        <p class="mb-4">Spring deals on top brands</p>
+                        <a href="#" class="inline-block bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Popular Categories -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6">Popular Categories</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <a href="#" class="bg-white rounded-lg p-4 text-center shadow-sm hover:shadow-md transition">
+                    <div class="category-icon bg-blue-100 rounded-full p-2 flex items-center justify-center">
+                        <i class="fas fa-mobile-alt text-blue-600 text-xl"></i>
+                    </div>
+                    <span class="block mt-2 text-sm">Cell Phones</span>
+                </a>
+                <a href="#" class="bg-white rounded-lg p-4 text-center shadow-sm hover:shadow-md transition">
+                    <div class="category-icon bg-red-100 rounded-full p-2 flex items-center justify-center">
+                        <i class="fas fa-tshirt text-red-600 text-xl"></i>
+                    </div>
+                    <span class="block mt-2 text-sm">Clothing</span>
+                </a>
+                <a href="#" class="bg-white rounded-lg p-4 text-center shadow-sm hover:shadow-md transition">
+                    <div class="category-icon bg-green-100 rounded-full p-2 flex items-center justify-center">
+                        <i class="fas fa-headphones text-green-600 text-xl"></i>
+                    </div>
+                    <span class="block mt-2 text-sm">Electronics</span>
+                </a>
+                <a href="#" class="bg-white rounded-lg p-4 text-center shadow-sm hover:shadow-md transition">
+                    <div class="category-icon bg-purple-100 rounded-full p-2 flex items-center justify-center">
+                        <i class="fas fa-gem text-purple-600 text-xl"></i>
+                    </div>
+                    <span class="block mt-2 text-sm">Jewelry</span>
+                </a>
+                <a href="#" class="bg-white rounded-lg p-4 text-center shadow-sm hover:shadow-md transition">
+                    <div class="category-icon bg-yellow-100 rounded-full p-2 flex items-center justify-center">
+                        <i class="fas fa-home text-yellow-600 text-xl"></i>
+                    </div>
+                    <span class="block mt-2 text-sm">Home & Garden</span>
+                </a>
+                <a href="#" class="bg-white rounded-lg p-4 text-center shadow-sm hover:shadow-md transition">
+                    <div class="category-icon bg-pink-100 rounded-full p-2 flex items-center justify-center">
+                        <i class="fas fa-gamepad text-pink-600 text-xl"></i>
+                    </div>
+                    <span class="block mt-2 text-sm">Video Games</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Daily Deals -->
+        <section class="mb-12">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Daily Deals</h2>
+                <a href="#" class="text-blue-600 hover:underline">See all</a>
+            </div>
+            <div class="deals-slider">
+                <div class="px-2">
+                    <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                        <div class="relative">
+                            <img src="https://source.unsplash.com/300x300/?iphone" alt="iPhone 13 Pro" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
+                                20% OFF
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-medium text-gray-900 mb-1 truncate">Apple iPhone 13 Pro - 128GB</h3>
+                            <p class="text-gray-500 text-sm mb-2">Free shipping</p>
+                            <div class="flex items-center mb-2">
+                                <span class="text-lg font-bold">$899.99</span>
+                                <span class="text-gray-500 line-through text-sm ml-2">$1,099.99</span>
+                            </div>
+                            <div class="flex items-center text-sm">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <span class="ml-1 text-gray-500">(352)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-2">
+                    <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                        <div class="relative">
+                            <img src="/api/placeholder/200/200" alt="Product" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
+                                40% OFF
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-medium text-gray-900 mb-1 truncate">Sony PlayStation 5 Console</h3>
+                            <p class="text-gray-500 text-sm mb-2">Free shipping</p>
+                            <div class="flex items-center mb-2">
+                                <span class="text-lg font-bold">$449.99</span>
+                                <span class="text-gray-500 line-through text-sm ml-2">$749.99</span>
+                            </div>
+                            <div class="flex items-center text-sm">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <span class="ml-1 text-gray-500">(1,245)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-2">
+                    <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                        <div class="relative">
+                            <img src="/api/placeholder/200/200" alt="Product" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
+                                15% OFF
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-medium text-gray-900 mb-1 truncate">Dyson V11 Absolute Cordless Vacuum</h3>
+                            <p class="text-gray-500 text-sm mb-2">+$15.00 shipping</p>
+                            <div class="flex items-center mb-2">
+                                <span class="text-lg font-bold">$549.00</span>
+                                <span class="text-gray-500 line-through text-sm ml-2">$649.00</span>
+                            </div>
+                            <div class="flex items-center text-sm">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <span class="ml-1 text-gray-500">(876)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-2">
+                    <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                        <div class="relative">
+                            <img src="/api/placeholder/200/200" alt="Product" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
+                                30% OFF
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-medium text-gray-900 mb-1 truncate">Samsung 55" QLED 4K Smart TV</h3>
+                            <p class="text-gray-500 text-sm mb-2">Free shipping</p>
+                            <div class="flex items-center mb-2">
+                                <span class="text-lg font-bold">$699.99</span>
+                                <span class="text-gray-500 line-through text-sm ml-2">$999.99</span>
+                            </div>
+                            <div class="flex items-center text-sm">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <span class="ml-1 text-gray-500">(532)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-2">
+                    <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                        <div class="relative">
+                            <img src="/api/placeholder/200/200" alt="Product" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
+                                25% OFF
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-medium text-gray-900 mb-1 truncate">Nintendo Switch OLED Console</h3>
+                            <p class="text-gray-500 text-sm mb-2">Free shipping</p>
+                            <div class="flex items-center mb-2">
+                                <span class="text-lg font-bold">$329.99</span>
+                                <span class="text-gray-500 line-through text-sm ml-2">$439.99</span>
+                            </div>
+                            <div class="flex items-center text-sm">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <span class="ml-1 text-gray-500">(1,023)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Items -->
+        <section class="mb-12">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Featured Items</h2>
+                <a href="#" class="text-blue-600 hover:underline">See all</a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                    <img src="https://source.unsplash.com/300x300/?macbook" alt="MacBook Pro" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-medium text-gray-900 mb-1">Apple MacBook Pro 14" M1 Pro</h3>
+                        <p class="text-gray-500 text-sm mb-2">Free 3-day shipping</p>
+                        <div class="flex items-center mb-2">
+                            <span class="text-lg font-bold">$1,799.00</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-sm">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <span class="ml-1 text-gray-500">(432)</span>
+                            </div>
+                            <span class="text-green-600 text-sm">345 sold</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                    <img src="https://source.unsplash.com/300x300/?mixer" alt="KitchenAid Mixer" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-medium text-gray-900 mb-1">KitchenAid Stand Mixer - Professional</h3>
+                        <p class="text-gray-500 text-sm mb-2">+$29.99 shipping</p>
+                        <div class="flex items-center mb-2">
+                            <span class="text-lg font-bold">$329.99</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-sm">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <span class="ml-1 text-gray-500">(1,892)</span>
+                            </div>
+                            <span class="text-green-600 text-sm">2.4k sold</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                    <img src="/api/placeholder/300/300" alt="Featured Product" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-medium text-gray-900 mb-1">Sony WH-1000XM4 Wireless Headphones</h3>
+                        <p class="text-gray-500 text-sm mb-2">Free shipping</p>
+                        <div class="flex items-center mb-2">
+                            <span class="text-lg font-bold">$279.99</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-sm">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <span class="ml-1 text-gray-500">(756)</span>
+                            </div>
+                            <span class="text-green-600 text-sm">1.2k sold</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                    <img src="/api/placeholder/300/300" alt="Featured Product" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-medium text-gray-900 mb-1">LEGO Star Wars Millennium Falcon</h3>
+                        <p class="text-gray-500 text-sm mb-2">Free shipping</p>
+                        <div class="flex items-center mb-2">
+                            <span class="text-lg font-bold">$169.99</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-sm">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <span class="ml-1 text-gray-500">(2,198)</span>
+                            </div>
+                            <span class="text-green-600 text-sm">3.5k sold</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recently Viewed & Recommendations -->
+        <section class="mb-12">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Based on your recent views</h2>
+                <a href="#" class="text-blue-600 hover:underline">See all</a>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                    <img src="/api/placeholder/150/150" alt="Product" class="w-full h-32 object-cover">
+                    <div class="p-3">
+                        <h3 class="font-medium text-gray-900 text-sm truncate">Apple AirPods Pro 2nd Generation</h3>
+                        <p class="text-sm font-bold mt-1">$229.00</p>
+                        <p class="text-xs text-gray-500">Free shipping</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                    <img src="/api/placeholder/150/150" alt="Product" class="w-full h-32 object-cover">
+                    <div class="p-3">
+                        <h3 class="font-medium text-gray-900 text-sm truncate">Dell XPS 15 Laptop - 16GB RAM</h3>
+                        <p class="text-sm font-bold mt-1">$1,499.99</p>
+                        <p class="text-xs text-gray-500">Free shipping</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                    <img src="/api/placeholder/150/150" alt="Product" class="w-full h-32 object-cover">
+                    <div class="p-3">
+                        <h3 class="font-medium text-gray-900 text-sm truncate">Canon EOS R6 Mirrorless Camera</h3>
+                        <p class="text-sm font-bold mt-1">$2,299.00</p>
+                        <p class="text-xs text-gray-500">+$15.00 shipping</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                    <img src="/api/placeholder/150/150" alt="Product" class="w-full h-32 object-cover">
+                    <div class="p-3">
+                        <h3 class="font-medium text-gray-900 text-sm truncate">Nike Air Jordan 1 High OG</h3>
+                        <p class="text-sm font-bold mt-1">$179.99</p>
+                        <p class="text-xs text-gray-500">Free shipping</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                    <img src="/api/placeholder/150/150" alt="Product" class="w-full h-32 object-cover">
+                    <div class="p-3">
+                        <h3 class="font-medium text-gray-900 text-sm truncate">Bose QuietComfort Earbuds</h3>
+                        <p class="text-sm font-bold mt-1">$199.00</p>
+                        <p class="text-xs text-gray-500">Free shipping</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                    <img src="/api/placeholder/150/150" alt="Product" class="w-full h-32 object-cover">
+                    <div class="p-3">
+                        <h3 class="font-medium text-gray-900 text-sm truncate">Samsung Galaxy Watch 5</h3>
+                        <p class="text-sm font-bold mt-1">$279.99</p>
+                        <p class="text-xs text-gray-500">Free shipping</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Top Brands -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6">Top Brands</h2>
+        </section>
+    </main>
+    <script>
+        $(document).ready(function(){
+            $('.deals-slider').slick({
+                dots: true,
+                infinite: true,
+                speed: 300,
+                slidesToShow: 4,
+                slidesToScroll: 1,
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 3,
+                            slidesToScroll: 1
+                        }
+                    },
+                    {
+                        breakpoint: 768,
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 1
+                        }
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+</body>
+</html>

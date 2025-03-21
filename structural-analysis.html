@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Structural Analysis & Truss Solver</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #f5f5f5;
+            --text-color: #333;
+            --border-color: #ddd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        nav {
+            background-color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .canvas-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        #truss-canvas {
+            width: 100%;
+            height: 600px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .tool-button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: var(--secondary-color);
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .tool-button:hover {
+            background-color: #2980b9;
+        }
+
+        .tool-button.active {
+            background-color: var(--accent-color);
+        }
+
+        .results-panel {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .tab-container {
+            margin-top: 20px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .tab-button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px 4px 0 0;
+            background-color: #f8f9fa;
+            cursor: pointer;
+        }
+
+        .tab-button.active {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background-color: white;
+            border-radius: 0 0 4px 4px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .toolbar {
+                flex-wrap: wrap;
+            }
+
+            #truss-canvas {
+                height: 400px;
+            }
+        }
+
+        /* Learning Hub Styles */
+        .learning-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .topic-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .topic {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .topic h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+
+        .topic h4 {
+            color: var(--secondary-color);
+            margin: 15px 0 10px;
+        }
+
+        .topic ul, .topic ol {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+
+        .topic li {
+            margin-bottom: 5px;
+        }
+
+        .topic-content {
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Structural Analysis & Truss Solver</h1>
+            <p>Interactive tool for structural analysis and truss problem solving</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="#" onclick="showSection('problem-solver')">Problem Solver</a></li>
+                <li><a href="#" onclick="showSection('graph-generator')">Graph Generator</a></li>
+                <li><a href="#" onclick="showSection('learning-hub')">Learning Hub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container main-content">
+        <div id="problem-solver" class="section" style="display: none;">
+            <div class="problem-container">
+                <h2>Problem Solver</h2>
+                <div class="problem-input">
+                    <div class="input-group">
+                        <h3>Problem Type</h3>
+                        <select id="problem-type" onchange="updateProblemInputs()">
+                            <option value="simple-beam">Simple Beam</option>
+                            <option value="cantilever">Cantilever Beam</option>
+                            <option value="warren-truss">Warren Truss</option>
+                            <option value="pratt-truss">Pratt Truss</option>
+                            <option value="howe-truss">Howe Truss</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <h3>Dimensions</h3>
+                        <label>
+                            Span Length (m):
+                            <input type="number" id="span-length" value="10" min="1" step="0.1">
+                        </label>
+                        <label>
+                            Height (m):
+                            <input type="number" id="truss-height" value="2" min="0.5" step="0.1">
+                        </label>
+                        <label>
+                            Number of Panels:
+                            <input type="number" id="num-panels" value="4" min="2" step="2">
+                        </label>
+                    </div>
+
+                    <div class="input-group">
+                        <h3>Loading</h3>
+                        <div id="load-points"></div>
+                        <button onclick="addLoadPoint()" class="tool-button">Add Load</button>
+                    </div>
+
+                    <button onclick="generateTruss()" class="tool-button">Generate Truss</button>
+                </div>
+
+                <div class="problem-preview">
+                    <canvas id="preview-canvas"></canvas>
+                </div>
+
+                <div class="solution-steps" style="display: none;">
+                    <h3>Solution Steps</h3>
+                    <div class="step-content"></div>
+                </div>
+            </div>
+
+            <style>
+                .problem-container {
+                    background-color: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                }
+
+                .problem-input {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                    gap: 20px;
+                    margin-bottom: 20px;
+                }
+
+                .input-group {
+                    padding: 15px;
+                    background-color: #f8f9fa;
+                    border-radius: 8px;
+                }
+
+                .input-group h3 {
+                    margin-bottom: 15px;
+                    color: var(--primary-color);
+                }
+
+                .input-group label {
+                    display: block;
+                    margin-bottom: 10px;
+                }
+
+                .input-group input, .input-group select {
+                    width: 100%;
+                    padding: 8px;
+                    margin-top: 5px;
+                    border: 1px solid var(--border-color);
+                    border-radius: 4px;
+                }
+
+                .problem-preview {
+                    margin: 20px 0;
+                    border: 1px solid var(--border-color);
+                    border-radius: 8px;
+                    overflow: hidden;
+                }
+
+                #preview-canvas {
+                    width: 100%;
+                    height: 300px;
+                    background-color: #f8f9fa;
+                }
+
+                .solution-steps {
+                    margin-top: 20px;
+                    padding: 20px;
+                    background-color: #f8f9fa;
+                    border-radius: 8px;
+                }
+
+                .step-content {
+                    margin-top: 15px;
+                    line-height: 1.6;
+                }
+
+                .load-point {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr auto;
+                    gap: 10px;
+                    margin-bottom: 10px;
+                    align-items: center;
+                }
+
+                .load-point button {
+                    padding: 5px 10px;
+                    background-color: var(--accent-color);
+                }
+            </style>
+        </div>
+
+        <div id="graph-generator" class="section">
+            <div class="canvas-container">
+                <div class="toolbar">
+                    <button class="tool-button" onclick="setTool('node')">Add Node</button>
+                    <button class="tool-button" onclick="setTool('member')">Add Member</button>
+                    <button class="tool-button" onclick="setTool('force')">Apply Force</button>
+                    <button class="tool-button" onclick="setTool('support')">Add Support</button>
+                    <button class="tool-button" onclick="calculate()">Calculate</button>
+                    <button class="tool-button" onclick="reset()">Reset</button>
+                </div>
+                <canvas id="truss-canvas"></canvas>
+            </div>
+
+            <div class="results-panel">
+                <h2>Analysis Results</h2>
+                <div class="tab-container">
+                    <div class="tab-buttons">
+                        <button class="tab-button active" onclick="showTab('forces')">Member Forces</button>
+                        <button class="tab-button" onclick="showTab('reactions')">Support Reactions</button>
+                        <button class="tab-button" onclick="showTab('stability')">Stability Check</button>
+                    </div>
+                    <div id="forces" class="tab-content active">
+                        <h3>Forces in Members</h3>
+                        <div id="forces-results"></div>
+                    </div>
+                    <div id="reactions" class="tab-content">
+                        <h3>Support Reactions</h3>
+                        <div id="reactions-results"></div>
+                    </div>
+                    <div id="stability" class="tab-content">
+                        <h3>Stability Analysis</h3>
+                        <div id="stability-results"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="learning-hub" class="section" style="display: none;">
+            <div class="learning-content">
+                <h2>Learning Hub</h2>
+                <div class="topic-list">
+                    <div class="topic">
+                        <h3>Determinacy and Stability</h3>
+                        <div class="topic-content">
+                            <h4>Determinacy</h4>
+                            <p>A truss is statically determinate when:</p>
+                            <ul>
+                                <li>2m + r = 2j (where m = members, r = reactions, j = joints)</li>
+                                <li>All forces can be determined using only equilibrium equations</li>
+                            </ul>
+                            
+                            <h4>Stability</h4>
+                            <p>A truss is stable when:</p>
+                            <ul>
+                                <li>It has adequate supports (minimum 3 reactions)</li>
+                                <li>Members are properly triangulated</li>
+                                <li>Number of members ≥ 2n - 3 (where n = number of nodes)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="topic">
+                        <h3>Methods of Analysis</h3>
+                        <div class="topic-content">
+                            <h4>Method of Joints</h4>
+                            <p>Steps:</p>
+                            <ol>
+                                <li>Draw free body diagram of each joint</li>
+                                <li>Apply force equilibrium equations (ΣFx = 0, ΣFy = 0)</li>
+                                <li>Solve equations systematically</li>
+                            </ol>
+                            
+                            <h4>Method of Sections</h4>
+                            <p>Used when forces in specific members are needed:</p>
+                            <ol>
+                                <li>Cut through the truss</li>
+                                <li>Apply equilibrium equations to the section</li>
+                                <li>Solve for unknown member forces</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="topic">
+                        <h3>Support Types</h3>
+                        <div class="topic-content">
+                            <h4>Pin Support</h4>
+                            <ul>
+                                <li>Provides two force reactions (Fx and Fy)</li>
+                                <li>No moment resistance</li>
+                            </ul>
+                            
+                            <h4>Roller Support</h4>
+                            <ul>
+                                <li>Provides one force reaction (perpendicular to surface)</li>
+                                <li>Allows horizontal movement</li>
+                            </ul>
+                            
+                            <h4>Fixed Support</h4>
+                            <ul>
+                                <li>Provides three reactions (Fx, Fy, and M)</li>
+                                <li>No translation or rotation allowed</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="structural-analysis.js"></script>
+    <script src="visualization.js"></script>
+    <script>
+        // Global variables
+        let currentTool = 'node';
+        let nodes = [];
+        let members = [];
+        let forces = [];
+        let supports = [];
+        let selectedNode = null;
+        let isDragging = false;
+        let lastMousePos = { x: 0, y: 0 };
+        
+        // Initialize analyzer and visualizer
+        const canvas = document.getElementById('truss-canvas');
+        const analyzer = new StructuralAnalyzer();
+        const visualizer = new TrussVisualizer(canvas);
+        
+        // Set canvas size
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            redraw();
+        }
+        
+        // Initialize
+        window.onload = function() {
+            resizeCanvas();
+            setupEventListeners();
+            drawGrid();
+            updateProblemInputs();
+            addLoadPoint(); // Add initial load point
+        }
+        
+        window.onresize = resizeCanvas;
+        
+        // Tool selection
+        function setTool(tool) {
+            currentTool = tool;
+            document.querySelectorAll('.tool-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Reset selection state
+            selectedNode = null;
+            canvas.style.cursor = tool === 'node' ? 'crosshair' : 'default';
+        }
+        
+        // Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(sectionId).style.display = 'block';
+        }
+        
+        // Tab switching
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        // Draw grid
+        function drawGrid() {
+            visualizer.drawGrid();
+        }
+        
+        // Event listeners
+        function setupEventListeners() {
+            canvas.addEventListener('mousedown', handleMouseDown);
+            canvas.addEventListener('mousemove', handleMouseMove);
+            canvas.addEventListener('mouseup', handleMouseUp);
+            canvas.addEventListener('wheel', handleWheel);
+        }
+        
+        function handleMouseDown(event) {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+            if (event.button === 1) { // Middle mouse button
+                isDragging = true;
+                lastMousePos = { x: event.clientX, y: event.clientY };
+                return;
+            }
+            
+            switch(currentTool) {
+                case 'node':
+                    addNode(x, y);
+                    break;
+                case 'member':
+                    handleMemberCreation(x, y);
+                    break;
+                case 'force':
+                    handleForceCreation(x, y);
+                    break;
+                case 'support':
+                    addSupport(x, y);
+                    break;
+            }
+        }
+        
+        function handleMouseMove(event) {
+            if (isDragging) {
+                const dx = event.clientX - lastMousePos.x;
+                const dy = event.clientY - lastMousePos.y;
+                visualizer.setOffset(
+                    visualizer.offset.x + dx,
+                    visualizer.offset.y + dy
+                );
+                lastMousePos = { x: event.clientX, y: event.clientY };
+                redraw();
+                return;
+            }
+            
+            // Preview functionality
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+            if (currentTool === 'member' && selectedNode) {
+                redraw();
+                visualizer.ctx.beginPath();
+                visualizer.ctx.moveTo(selectedNode.x, selectedNode.y);
+                visualizer.ctx.lineTo(x, y);
+                visualizer.ctx.strokeStyle = '#aaa';
+                visualizer.ctx.setLineDash([5, 5]);
+                visualizer.ctx.stroke();
+                visualizer.ctx.setLineDash([]);
+            }
+        }
+        
+        function handleMouseUp() {
+            isDragging = false;
+        }
+        
+        function handleWheel(event) {
+            event.preventDefault();
+            const delta = event.deltaY > 0 ? 0.9 : 1.1;
+            visualizer.setScale(visualizer.scale * delta);
+            redraw();
+        }
+        
+        // Node functions
+        function addNode(x, y) {
+            const gridPos = visualizer.screenToGrid(x, y);
+            const node = {
+                x: gridPos.x,
+                y: gridPos.y,
+                id: nodes.length
+            };
+            nodes.push(node);
+            analyzer.nodes = nodes;
+            redraw();
+        }
+        
+        // Member functions
+        function handleMemberCreation(x, y) {
+            const gridPos = visualizer.screenToGrid(x, y);
+            const node = findNearestNode(gridPos.x, gridPos.y);
+            
+            if (!node) return;
+            
+            if (!selectedNode) {
+                selectedNode = node;
+            } else {
+                if (selectedNode !== node) {
+                    members.push({
+                        start: selectedNode.id,
+                        end: node.id,
+                        id: members.length
+                    });
+                    analyzer.members = members;
+                }
+                selectedNode = null;
+                redraw();
+            }
+        }
+        
+        // Force functions
+        function handleForceCreation(x, y) {
+            const gridPos = visualizer.screenToGrid(x, y);
+            const node = findNearestNode(gridPos.x, gridPos.y);
+            
+            if (!node) return;
+            
+            // Show force input dialog
+            const magnitude = prompt('Enter force magnitude (kN):', '10');
+            const angle = prompt('Enter force angle (degrees):', '0');
+            
+            if (magnitude !== null && angle !== null) {
+                forces.push({
+                    nodeId: node.id,
+                    magnitude: parseFloat(magnitude),
+                    angle: parseFloat(angle) * Math.PI / 180,
+                    id: forces.length
+                });
+                analyzer.forces = forces;
+                redraw();
+            }
+        }
+        
+        // Support functions
+        function addSupport(x, y) {
+            const gridPos = visualizer.screenToGrid(x, y);
+            const node = findNearestNode(gridPos.x, gridPos.y);
+            
+            if (!node) return;
+            
+            const type = prompt('Enter support type (pin/roller/fixed):', 'pin');
+            
+            if (type) {
+                supports.push({
+                    nodeId: node.id,
+                    type: type.toLowerCase(),
+                    id: supports.length
+                });
+                analyzer.supports = supports;
+                redraw();
+            }
+        }
+        
+        // Helper functions
+        function findNearestNode(x, y) {
+            const threshold = 20 * visualizer.scale;
+            return nodes.find(node => {
+                const screenPos = visualizer.gridToScreen(node.x, node.y);
+                const distance = Math.sqrt(
+                    Math.pow(screenPos.x - x, 2) + Math.pow(screenPos.y - y, 2)
+                );
+                return distance < threshold;
+            });
+        }
+        
+        // Redraw function
+        function redraw() {
+            visualizer.clear();
+            visualizer.drawGrid();
+            
+            // Draw members
+            members.forEach(member => {
+                const start = nodes[member.start];
+                const end = nodes[member.end];
+                const startPos = visualizer.gridToScreen(start.x, start.y);
+                const endPos = visualizer.gridToScreen(end.x, end.y);
+                visualizer.drawMemberWithForce(startPos, endPos, 0);  // Force will be updated after calculation
+            });
+            
+            // Draw nodes
+            nodes.forEach(node => {
+                const pos = visualizer.gridToScreen(node.x, node.y);
+                visualizer.ctx.beginPath();
+                visualizer.ctx.arc(pos.x, pos.y, 5, 0, Math.PI * 2);
+                visualizer.ctx.fillStyle = '#3498db';
+                visualizer.ctx.fill();
+            });
+            
+            // Draw forces
+            forces.forEach(force => {
+                const node = nodes[force.nodeId];
+                const pos = visualizer.gridToScreen(node.x, node.y);
+                visualizer.drawForce(pos.x, pos.y, force.magnitude, force.angle);
+            });
+            
+            // Draw supports
+            supports.forEach(support => {
+                const node = nodes[support.nodeId];
+                const pos = visualizer.gridToScreen(node.x, node.y);
+                visualizer.drawSupport(pos.x, pos.y, support.type);
+            });
+        }
+        
+        // Calculate function
+        function calculate() {
+            if (!validateStructure()) {
+                alert('Please ensure the structure is properly defined with adequate supports and loads.');
+                return;
+            }
+            
+            // Check stability and determinacy
+            const stability = analyzer.checkStability();
+            if (!stability.isStable) {
+                alert('The structure is unstable. Please check the following:\n' +
+                      '- Minimum number of members\n' +
+                      '- Adequate supports\n' +
+                      '- Proper triangulation');
+                return;
+            }
+            
+            // Generate comprehensive report
+            generateReport();
+            
+            // Show results panel
+            document.querySelectorAll('.result').forEach(panel => {
+                panel.style.display = 'block';
+            });
+        }
+        
+        function validateStructure() {
+            return nodes.length > 0 && 
+                   members.length > 0 && 
+                   supports.length > 0 && 
+                   forces.length > 0;
+        }
+        
+        function displayResults(memberForces, reactions, stability, sectionResults) {
+            // Display member forces
+            const forcesDiv = document.getElementById('forces-results');
+            forcesDiv.innerHTML = memberForces.map(force => `
+                <p>Member ${force.id + 1}: ${force.magnitude.toFixed(2)} kN 
+                   (${force.type})</p>
+            `).join('');
+            
+            // Display reactions with fixed-end moments
+            const reactionsDiv = document.getElementById('reactions-results');
+            reactionsDiv.innerHTML = Object.entries(reactions).map(([id, reaction]) => {
+                let html = `<p>Support ${parseInt(id) + 1}:<br>`;
+                
+                if (supports[id].type === 'fixed') {
+                    html += `
+                        Fx = ${reaction.Fx.toFixed(2)} kN<br>
+                        Fy = ${reaction.Fy.toFixed(2)} kN<br>
+                        M = ${reaction.M.toFixed(2)} kN·m<br>
+                        Fixed-End Moment = ${reaction.fixedEndMoment ? 
+                            reaction.fixedEndMoment.toFixed(2) : '0.00'} kN·m
+                    `;
+                } else {
+                    html += `
+                        Fx = ${reaction.Fx.toFixed(2)} kN<br>
+                        Fy = ${reaction.Fy.toFixed(2)} kN
+                        ${reaction.M ? `<br>M = ${reaction.M.toFixed(2)} kN·m` : ''}
+                    `;
+                }
+                
+                return html + '</p>';
+            }).join('');
+            
+            // Display stability check
+            const stabilityDiv = document.getElementById('stability-results');
+            stabilityDiv.innerHTML = `
+                <p>Structure is ${stability.isStable ? 'stable' : 'unstable'}</p>
+                <p>Determinacy: ${stability.details.isStaticallyDeterminate ? 
+                    'Statically Determinate' : 'Statically Indeterminate'}</p>
+                <p>Minimum members: ${stability.details.hasMinimumMembers ? 'Yes' : 'No'}</p>
+                <p>Adequate supports: ${stability.details.hasAdequateSupports ? 'Yes' : 'No'}</p>
+                <p>Proper triangulation: ${stability.details.isTriangulated ? 'Yes' : 'No'}</p>
+            `;
+            
+            // Add section analysis results with fixed-end effects
+            stabilityDiv.innerHTML += `
+                <h4>Section Analysis (Midspan)</h4>
+                <p>Shear Force: ${sectionResults.shear.toFixed(2)} kN</p>
+                <p>Bending Moment: ${sectionResults.moment.toFixed(2)} kN·m</p>
+                <h5>Member Forces at Section:</h5>
+                ${Object.entries(sectionResults.forces).map(([id, force]) => `
+                    <p>Member ${parseInt(id) + 1}: 
+                       ${force.magnitude.toFixed(2)} kN 
+                       (${force.magnitude > 0 ? 'Tension' : 'Compression'})</p>
+                `).join('')}
+            `;
+            
+            // Show results panel
+            document.querySelectorAll('.result').forEach(panel => {
+                panel.style.display = 'block';
+            });
+        }
+        
+        // Reset function
+        function reset() {
+            nodes = [];
+            members = [];
+            forces = [];
+            supports = [];
+            selectedNode = null;
+            
+            analyzer.nodes = [];
+            analyzer.members = [];
+            analyzer.forces = [];
+            analyzer.supports = [];
+            
+            visualizer.clear();
+            visualizer.drawGrid();
+            
+            document.querySelectorAll('.result').forEach(panel => {
+                panel.style.display = 'none';
+            });
+        }
+
+        // Problem Solver Functions
+        function updateProblemInputs() {
+            const type = document.getElementById('problem-type').value;
+            const numPanelsInput = document.getElementById('num-panels');
+            
+            switch(type) {
+                case 'simple-beam':
+                    numPanelsInput.value = '1';
+                    numPanelsInput.disabled = true;
+                    break;
+                case 'cantilever':
+                    numPanelsInput.value = '1';
+                    numPanelsInput.disabled = true;
+                    break;
+                default:
+                    numPanelsInput.disabled = false;
+                    if (numPanelsInput.value === '1') {
+                        numPanelsInput.value = '4';
+                    }
+            }
+            
+            previewTruss();
+        }
+
+        function addLoadPoint() {
+            const loadPoints = document.getElementById('load-points');
+            const loadId = loadPoints.children.length;
+            
+            const loadDiv = document.createElement('div');
+            loadDiv.className = 'load-point';
+            loadDiv.innerHTML = `
+                <input type="number" placeholder="Position (m)" step="0.1">
+                <input type="number" placeholder="Load (kN)" step="0.1">
+                <button onclick="removeLoad(${loadId})" class="tool-button">Remove</button>
+            `;
+            
+            loadPoints.appendChild(loadDiv);
+        }
+
+        function removeLoad(id) {
+            const loadPoints = document.getElementById('load-points');
+            loadPoints.children[id].remove();
+            previewTruss();
+        }
+
+        function generateTruss() {
+            const type = document.getElementById('problem-type').value;
+            const span = parseFloat(document.getElementById('span-length').value);
+            const height = parseFloat(document.getElementById('truss-height').value);
+            const panels = parseInt(document.getElementById('num-panels').value);
+            
+            // Clear existing structure
+            reset();
+            
+            switch(type) {
+                case 'warren-truss':
+                    generateWarrenTruss(span, height, panels);
+                    break;
+                case 'pratt-truss':
+                    generatePrattTruss(span, height, panels);
+                    break;
+                case 'howe-truss':
+                    generateHoweTruss(span, height, panels);
+                    break;
+                case 'cantilever':
+                    generateCantileverBeam(span);
+                    break;
+                default:
+                    generateSimpleBeam(span);
+            }
+            
+            // Add loads
+            const loadPoints = document.getElementById('load-points').children;
+            Array.from(loadPoints).forEach(loadPoint => {
+                const inputs = loadPoint.getElementsByTagName('input');
+                const position = parseFloat(inputs[0].value);
+                const magnitude = parseFloat(inputs[1].value);
+                
+                if (!isNaN(position) && !isNaN(magnitude)) {
+                    addLoadToTruss(position, magnitude);
+                }
+            });
+            
+            // Switch to graph generator view
+            showSection('graph-generator');
+            redraw();
+        }
+
+        function generateWarrenTruss(span, height, panels) {
+            const dx = span / panels;
+            const dy = height;
+            
+            // Generate bottom chord nodes
+            for (let i = 0; i <= panels; i++) {
+                addNode(i * dx, 0);
+            }
+            
+            // Generate top chord nodes
+            for (let i = 0; i <= panels; i++) {
+                addNode(i * dx, dy);
+            }
+            
+            // Add bottom chord members
+            for (let i = 0; i < panels; i++) {
+                members.push({
+                    start: i,
+                    end: i + 1,
+                    id: members.length
+                });
+            }
+            
+            // Add top chord members
+            for (let i = 0; i < panels; i++) {
+                members.push({
+                    start: panels + 1 + i,
+                    end: panels + 2 + i,
+                    id: members.length
+                });
+            }
+            
+            // Add web members
+            for (let i = 0; i < panels; i++) {
+                if (i % 2 === 0) {
+                    members.push({
+                        start: i,
+                        end: panels + 2 + i,
+                        id: members.length
+                    });
+                } else {
+                    members.push({
+                        start: i + 1,
+                        end: panels + 1 + i,
+                        id: members.length
+                    });
+                }
+            }
+            
+            // Add supports
+            supports.push({
+                nodeId: 0,
+                type: 'pin',
+                id: 0
+            });
+            
+            supports.push({
+                nodeId: panels,
+                type: 'roller',
+                id: 1
+            });
+            
+            analyzer.nodes = nodes;
+            analyzer.members = members;
+            analyzer.supports = supports;
+        }
+
+        function generatePrattTruss(span, height, panels) {
+            const dx = span / panels;
+            const dy = height;
+            
+            // Generate bottom chord nodes
+            for (let i = 0; i <= panels; i++) {
+                addNode(i * dx, 0);
+            }
+            
+            // Generate top chord nodes
+            for (let i = 0; i <= panels; i++) {
+                addNode(i * dx, dy);
+            }
+            
+            // Add bottom chord members
+            for (let i = 0; i < panels; i++) {
+                members.push({
+                    start: i,
+                    end: i + 1,
+                    id: members.length
+                });
+            }
+            
+            // Add top chord members
+            for (let i = 0; i < panels; i++) {
+                members.push({
+                    start: panels + 1 + i,
+                    end: panels + 2 + i,
+                    id: members.length
+                });
+            }
+            
+            // Add vertical members
+            for (let i = 0; i <= panels; i++) {
+                members.push({
+                    start: i,
+                    end: panels + 1 + i,
+                    id: members.length
+                });
+            }
+            
+            // Add diagonal members (tension diagonals)
+            for (let i = 0; i < panels; i++) {
+                members.push({
+                    start: i,
+                    end: panels + 2 + i,
+                    id: members.length
+                });
+            }
+            
+            // Add supports
+            supports.push({
+                nodeId: 0,
+                type: 'pin',
+                id: 0
+            });
+            
+            supports.push({
+                nodeId: panels,
+                type: 'roller',
+                id: 1
+            });
+            
+            analyzer.nodes = nodes;
+            analyzer.members = members;
+            analyzer.supports = supports;
+        }
+
+        function generateHoweTruss(span, height, panels) {
+            const dx = span / panels;
+            const dy = height;
+            
+            // Generate bottom chord nodes
+            for (let i = 0; i <= panels; i++) {
+                addNode(i * dx, 0);
+            }
+            
+            // Generate top chord nodes
+            for (let i = 0; i <= panels; i++) {
+                addNode(i * dx, dy);
+            }
+            
+            // Add bottom chord members
+            for (let i = 0; i < panels; i++) {
+                members.push({
+                    start: i,
+                    end: i + 1,
+                    id: members.length
+                });
+            }
+            
+            // Add top chord members
+            for (let i = 0; i < panels; i++) {
+                members.push({
+                    start: panels + 1 + i,
+                    end: panels + 2 + i,
+                    id: members.length
+                });
+            }
+            
+            // Add vertical members
+            for (let i = 0; i <= panels; i++) {
+                members.push({
+                    start: i,
+                    end: panels + 1 + i,
+                    id: members.length
+                });
+            }
+            
+            // Add diagonal members (compression diagonals)
+            for (let i = 0; i < panels; i++) {
+                members.push({
+                    start: panels + 1 + i,
+                    end: i + 1,
+                    id: members.length
+                });
+            }
+            
+            // Add supports
+            supports.push({
+                nodeId: 0,
+                type: 'pin',
+                id: 0
+            });
+            
+            supports.push({
+                nodeId: panels,
+                type: 'roller',
+                id: 1
+            });
+            
+            analyzer.nodes = nodes;
+            analyzer.members = members;
+            analyzer.supports = supports;
+        }
+
+        function generateSimpleBeam(span) {
+            // Generate simple beam with two nodes and one member
+            addNode(0, 0);
+            addNode(span, 0);
+            
+            members.push({
+                start: 0,
+                end: 1,
+                id: 0
+            });
+            
+            supports.push({
+                nodeId: 0,
+                type: 'pin',
+                id: 0
+            });
+            
+            supports.push({
+                nodeId: 1,
+                type: 'roller',
+                id: 1
+            });
+            
+            analyzer.nodes = nodes;
+            analyzer.members = members;
+            analyzer.supports = supports;
+        }
+
+        function generateCantileverBeam(span) {
+            // Generate cantilever beam with two nodes and one member
+            addNode(0, 0);
+            addNode(span, 0);
+            
+            members.push({
+                start: 0,
+                end: 1,
+                id: 0
+            });
+            
+            // Add fixed support at left end
+            supports.push({
+                nodeId: 0,
+                type: 'fixed',
+                id: 0
+            });
+            
+            analyzer.nodes = nodes;
+            analyzer.members = members;
+            analyzer.supports = supports;
+        }
+
+        function addLoadToTruss(position, magnitude) {
+            // Find nearest node to load position
+            const nearestNode = findNearestNodeByX(position);
+            if (nearestNode) {
+                forces.push({
+                    nodeId: nearestNode.id,
+                    magnitude: -Math.abs(magnitude), // Downward force
+                    angle: -Math.PI / 2, // 270 degrees (downward)
+                    id: forces.length
+                });
+            }
+            analyzer.forces = forces;
+        }
+
+        function findNearestNodeByX(x) {
+            return nodes.reduce((nearest, node) => {
+                if (!nearest || Math.abs(node.x - x) < Math.abs(nearest.x - x)) {
+                    return node;
+                }
+                return nearest;
+            }, null);
+        }
+
+        function previewTruss() {
+            const canvas = document.getElementById('preview-canvas');
+            const ctx = canvas.getContext('2d');
+            const type = document.getElementById('problem-type').value;
+            const span = parseFloat(document.getElementById('span-length').value);
+            const height = parseFloat(document.getElementById('truss-height').value);
+            const panels = parseInt(document.getElementById('num-panels').value);
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Set scale and offset
+            const margin = 50;
+            const scale = (canvas.width - 2 * margin) / span;
+            const offsetX = margin;
+            const offsetY = canvas.height / 2;
+            
+            // Draw preview based on type
+            ctx.beginPath();
+            ctx.strokeStyle = '#3498db';
+            ctx.lineWidth = 2;
+            
+            switch(type) {
+                case 'warren-truss':
+                    drawWarrenPreview(ctx, span, height, panels, scale, offsetX, offsetY);
+                    break;
+                case 'pratt-truss':
+                    drawPrattPreview(ctx, span, height, panels, scale, offsetX, offsetY);
+                    break;
+                case 'howe-truss':
+                    drawHowePreview(ctx, span, height, panels, scale, offsetX, offsetY);
+                    break;
+                case 'cantilever':
+                    drawCantileverPreview(ctx, span, scale, offsetX, offsetY);
+                    break;
+                default:
+                    drawSimpleBeamPreview(ctx, span, scale, offsetX, offsetY);
+            }
+            
+            ctx.stroke();
+        }
+
+        function drawWarrenPreview(ctx, span, height, panels, scale, offsetX, offsetY) {
+            const dx = (span * scale) / panels;
+            const dy = height * scale;
+            
+            // Draw bottom chord
+            ctx.moveTo(offsetX, offsetY);
+            ctx.lineTo(offsetX + span * scale, offsetY);
+            
+            // Draw top chord
+            ctx.moveTo(offsetX, offsetY - dy);
+            ctx.lineTo(offsetX + span * scale, offsetY - dy);
+            
+            // Draw web members
+            for (let i = 0; i <= panels; i++) {
+                if (i % 2 === 0) {
+                    ctx.moveTo(offsetX + i * dx, offsetY);
+                    ctx.lineTo(offsetX + (i + 1) * dx, offsetY - dy);
+                } else {
+                    ctx.moveTo(offsetX + i * dx, offsetY - dy);
+                    ctx.lineTo(offsetX + (i + 1) * dx, offsetY);
+                }
+            }
+        }
+
+        function drawPrattPreview(ctx, span, height, panels, scale, offsetX, offsetY) {
+            const dx = (span * scale) / panels;
+            const dy = height * scale;
+            
+            // Draw bottom chord
+            ctx.moveTo(offsetX, offsetY);
+            ctx.lineTo(offsetX + span * scale, offsetY);
+            
+            // Draw top chord
+            ctx.moveTo(offsetX, offsetY - dy);
+            ctx.lineTo(offsetX + span * scale, offsetY - dy);
+            
+            // Draw vertical members
+            for (let i = 0; i <= panels; i++) {
+                ctx.moveTo(offsetX + i * dx, offsetY);
+                ctx.lineTo(offsetX + i * dx, offsetY - dy);
+            }
+            
+            // Draw diagonal members
+            for (let i = 0; i < panels; i++) {
+                ctx.moveTo(offsetX + i * dx, offsetY);
+                ctx.lineTo(offsetX + (i + 1) * dx, offsetY - dy);
+            }
+        }
+
+        function drawHowePreview(ctx, span, height, panels, scale, offsetX, offsetY) {
+            const dx = (span * scale) / panels;
+            const dy = height * scale;
+            
+            // Draw bottom chord
+            ctx.moveTo(offsetX, offsetY);
+            ctx.lineTo(offsetX + span * scale, offsetY);
+            
+            // Draw top chord
+            ctx.moveTo(offsetX, offsetY - dy);
+            ctx.lineTo(offsetX + span * scale, offsetY - dy);
+            
+            // Draw vertical members
+            for (let i = 0; i <= panels; i++) {
+                ctx.moveTo(offsetX + i * dx, offsetY);
+                ctx.lineTo(offsetX + i * dx, offsetY - dy);
+            }
+            
+            // Draw diagonal members
+            for (let i = 0; i < panels; i++) {
+                ctx.moveTo(offsetX + i * dx, offsetY - dy);
+                ctx.lineTo(offsetX + (i + 1) * dx, offsetY);
+            }
+        }
+
+        function drawCantileverPreview(ctx, span, scale, offsetX, offsetY) {
+            // Draw beam
+            ctx.moveTo(offsetX, offsetY);
+            ctx.lineTo(offsetX + span * scale, offsetY);
+            
+            // Draw fixed support
+            ctx.moveTo(offsetX - 15, offsetY - 20);
+            ctx.lineTo(offsetX - 15, offsetY + 20);
+            for (let i = -20; i <= 20; i += 5) {
+                ctx.moveTo(offsetX - 15, offsetY + i);
+                ctx.lineTo(offsetX, offsetY + i);
+            }
+        }
+
+        function drawSimpleBeamPreview(ctx, span, scale, offsetX, offsetY) {
+            // Draw beam
+            ctx.moveTo(offsetX, offsetY);
+            ctx.lineTo(offsetX + span * scale, offsetY);
+            
+            // Draw pin support
+            ctx.moveTo(offsetX - 10, offsetY + 10);
+            ctx.lineTo(offsetX + 10, offsetY + 10);
+            ctx.moveTo(offsetX - 10, offsetY + 10);
+            ctx.lineTo(offsetX, offsetY);
+            ctx.moveTo(offsetX + 10, offsetY + 10);
+            ctx.lineTo(offsetX, offsetY);
+            
+            // Draw roller support
+            const rightX = offsetX + span * scale;
+            ctx.moveTo(rightX - 10, offsetY + 10);
+            ctx.lineTo(rightX + 10, offsetY + 10);
+            ctx.arc(rightX, offsetY + 15, 5, 0, Math.PI * 2);
+            ctx.arc(rightX - 7, offsetY + 15, 5, 0, Math.PI * 2);
+            ctx.arc(rightX + 7, offsetY + 15, 5, 0, Math.PI * 2);
+        }
+
+        // Method of Sections Analysis
+        function methodOfSections(section) {
+            const results = {
+                forces: {},
+                moments: {},
+                shear: 0,
+                moment: 0,
+                fixedEndMoment: 0
+            };
+            
+            // Get all members intersected by the section
+            const intersectedMembers = members.filter(member => {
+                const start = nodes[member.start];
+                const end = nodes[member.end];
+                return (start.x < section && end.x > section) || 
+                       (start.x > section && end.x < section);
+            });
+            
+            // Calculate forces in intersected members
+            intersectedMembers.forEach(member => {
+                const start = nodes[member.start];
+                const end = nodes[member.end];
+                
+                // Calculate member angle
+                const dx = end.x - start.x;
+                const dy = end.y - start.y;
+                const angle = Math.atan2(dy, dx);
+                
+                // Get member force from analysis results
+                const memberForce = analyzer.getMemberForce(member.id);
+                
+                // Decompose force into x and y components
+                results.forces[member.id] = {
+                    magnitude: memberForce,
+                    angle: angle,
+                    Fx: memberForce * Math.cos(angle),
+                    Fy: memberForce * Math.sin(angle)
+                };
+                
+                // Calculate moment about section point
+                const arm = Math.abs(start.y - end.y);
+                results.moments[member.id] = memberForce * arm;
+            });
+            
+            // Calculate section properties
+            results.shear = Object.values(results.forces)
+                .reduce((sum, force) => sum + force.Fy, 0);
+            
+            results.moment = Object.values(results.moments)
+                .reduce((sum, moment) => sum + moment, 0);
+            
+            // Add fixed-end moment effects if applicable
+            const fixedSupports = supports.filter(s => s.type === 'fixed');
+            fixedSupports.forEach(support => {
+                const node = nodes[support.nodeId];
+                const distance = Math.abs(node.x - section);
+                if (node.x < section) {
+                    results.fixedEndMoment += analyzer.getFixedEndMoment(support.id) * (1 - distance/span);
+                }
+            });
+            
+            results.moment += results.fixedEndMoment;
+            
+            return results;
+        }
+
+        function calculateDeflection() {
+            const E = 200000; // Young's modulus (MPa)
+            const I = 1000000; // Moment of inertia (mm4)
+            const results = {
+                maxDeflection: 0,
+                deflections: [],
+                locations: []
+            };
+            
+            // Calculate deflections at multiple points
+            const numPoints = 100;
+            const span = Math.max(...nodes.map(node => node.x)) - 
+                        Math.min(...nodes.map(node => node.x));
+            const dx = span / numPoints;
+            
+            for (let i = 0; i <= numPoints; i++) {
+                const x = i * dx;
+                let deflection = 0;
+                
+                // Get section properties at this location
+                const sectionResults = methodOfSections(x);
+                
+                // Calculate deflection using moment-area method
+                deflection = (sectionResults.moment * Math.pow(x, 2)) / (6 * E * I);
+                
+                // Add support conditions
+                supports.forEach(support => {
+                    const node = nodes[support.nodeId];
+                    if (support.type === 'fixed' && node.x === 0) {
+                        deflection = 0;
+                    }
+                });
+                
+                results.deflections.push(deflection);
+                results.locations.push(x);
+                
+                if (Math.abs(deflection) > Math.abs(results.maxDeflection)) {
+                    results.maxDeflection = deflection;
+                }
+            }
+            
+            return results;
+        }
+
+        function generateReport() {
+            const type = document.getElementById('problem-type').value;
+            const span = parseFloat(document.getElementById('span-length').value);
+            const height = parseFloat(document.getElementById('truss-height').value);
+            const panels = parseInt(document.getElementById('num-panels').value);
+            
+            // Perform all analyses
+            const stability = analyzer.checkStability();
+            const memberForces = analyzer.methodOfJoints();
+            const reactions = analyzer.calculateSupportReactions();
+            const sectionResults = methodOfSections(span / 2);
+            const deflectionResults = calculateDeflection();
+            
+            // Create report content
+            const report = document.createElement('div');
+            report.className = 'analysis-report';
+            report.innerHTML = `
+                <style>
+                    .analysis-report {
+                        background-color: white;
+                        padding: 30px;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                        margin: 20px 0;
+                    }
+                    
+                    .report-section {
+                        margin-bottom: 25px;
+                        padding-bottom: 15px;
+                        border-bottom: 1px solid #eee;
+                    }
+                    
+                    .report-section h3 {
+                        color: var(--primary-color);
+                        margin-bottom: 15px;
+                    }
+                    
+                    .data-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin: 10px 0;
+                    }
+                    
+                    .data-table th, .data-table td {
+                        padding: 8px;
+                        border: 1px solid #ddd;
+                        text-align: left;
+                    }
+                    
+                    .data-table th {
+                        background-color: #f8f9fa;
+                    }
+                    
+                    .chart-container {
+                        margin: 20px 0;
+                        height: 300px;
+                    }
+                    
+                    .critical-value {
+                        color: var(--accent-color);
+                        font-weight: bold;
+                    }
+                </style>
+                
+                <h2>Structural Analysis Report</h2>
+                <div class="report-section">
+                    <h3>Structure Information</h3>
+                    <p>Type: ${type.replace('-', ' ').toUpperCase()}</p>
+                    <p>Span: ${span} m</p>
+                    ${type !== 'simple-beam' && type !== 'cantilever' ? 
+                        `<p>Height: ${height} m</p>
+                         <p>Number of Panels: ${panels}</p>` : ''}
+                </div>
+                
+                <div class="report-section">
+                    <h3>Stability Analysis</h3>
+                    <p>Structure Status: <span class="critical-value">
+                        ${stability.isStable ? 'STABLE' : 'UNSTABLE'}</span></p>
+                    <p>Type: ${stability.details.isStaticallyDeterminate ? 
+                        'Statically Determinate' : 'Statically Indeterminate'}</p>
+                    <ul>
+                        <li>Minimum Members: ${stability.details.hasMinimumMembers ? '✓' : '✗'}</li>
+                        <li>Adequate Supports: ${stability.details.hasAdequateSupports ? '✓' : '✗'}</li>
+                        <li>Proper Triangulation: ${stability.details.isTriangulated ? '✓' : '✗'}</li>
+                    </ul>
+                </div>
+                
+                <div class="report-section">
+                    <h3>Member Forces</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Member</th>
+                                <th>Force (kN)</th>
+                                <th>Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${memberForces.map(force => `
+                                <tr>
+                                    <td>Member ${force.id + 1}</td>
+                                    <td>${Math.abs(force.magnitude).toFixed(2)}</td>
+                                    <td>${force.type}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="report-section">
+                    <h3>Support Reactions</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Support</th>
+                                <th>Fx (kN)</th>
+                                <th>Fy (kN)</th>
+                                <th>M (kN·m)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${Object.entries(reactions).map(([id, reaction]) => `
+                                <tr>
+                                    <td>Support ${parseInt(id) + 1}</td>
+                                    <td>${reaction.Fx.toFixed(2)}</td>
+                                    <td>${reaction.Fy.toFixed(2)}</td>
+                                    <td>${reaction.M ? reaction.M.toFixed(2) : '-'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="report-section">
+                    <h3>Section Analysis (Midspan)</h3>
+                    <p>Shear Force: <span class="critical-value">
+                        ${sectionResults.shear.toFixed(2)} kN</span></p>
+                    <p>Bending Moment: <span class="critical-value">
+                        ${sectionResults.moment.toFixed(2)} kN·m</span></p>
+                    ${sectionResults.fixedEndMoment ? 
+                        `<p>Fixed-End Moment: ${sectionResults.fixedEndMoment.toFixed(2)} kN·m</p>` : ''}
+                </div>
+                
+                <div class="report-section">
+                    <h3>Deflection Analysis</h3>
+                    <p>Maximum Deflection: <span class="critical-value">
+                        ${Math.abs(deflectionResults.maxDeflection).toFixed(4)} mm</span></p>
+                    <div id="deflection-chart" class="chart-container"></div>
+                </div>
+            `;
+            
+            // Add report to the page
+            const resultsPanel = document.querySelector('.results-panel');
+            resultsPanel.appendChild(report);
+            
+            // Create deflection chart using D3.js
+            createDeflectionChart(deflectionResults);
+        }
+
+        function createDeflectionChart(deflectionResults) {
+            // Set up chart dimensions
+            const margin = {top: 20, right: 20, bottom: 30, left: 50};
+            const width = 800 - margin.left - margin.right;
+            const height = 300 - margin.top - margin.bottom;
+            
+            // Create SVG container
+            const svg = d3.select('#deflection-chart')
+                .append('svg')
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom)
+                .append('g')
+                .attr('transform', `translate(${margin.left},${margin.top})`);
+            
+            // Create scales
+            const x = d3.scaleLinear()
+                .domain([0, d3.max(deflectionResults.locations)])
+                .range([0, width]);
+            
+            const y = d3.scaleLinear()
+                .domain([d3.min(deflectionResults.deflections), 
+                        d3.max(deflectionResults.deflections)])
+                .range([height, 0]);
+            
+            // Create line generator
+            const line = d3.line()
+                .x(d => x(d[0]))
+                .y(d => y(d[1]));
+            
+            // Create axes
+            svg.append('g')
+                .attr('transform', `translate(0,${height})`)
+                .call(d3.axisBottom(x).ticks(10));
+            
+            svg.append('g')
+                .call(d3.axisLeft(y).ticks(10));
+            
+            // Add labels
+            svg.append('text')
+                .attr('transform', `translate(${width/2},${height + margin.top + 10})`)
+                .style('text-anchor', 'middle')
+                .text('Position along span (m)');
+            
+            svg.append('text')
+                .attr('transform', 'rotate(-90)')
+                .attr('y', 0 - margin.left)
+                .attr('x', 0 - (height / 2))
+                .attr('dy', '1em')
+                .style('text-anchor', 'middle')
+                .text('Deflection (mm)');
+            
+            // Plot deflection curve
+            const data = deflectionResults.locations.map((x, i) => [x, deflectionResults.deflections[i]]);
+            
+            svg.append('path')
+                .datum(data)
+                .attr('fill', 'none')
+                .attr('stroke', '#3498db')
+                .attr('stroke-width', 2)
+                .attr('d', line);
+            
+            // Add grid lines
+            svg.append('g')
+                .attr('class', 'grid')
+                .attr('transform', `translate(0,${height})`)
+                .call(d3.axisBottom(x)
+                    .ticks(10)
+                    .tickSize(-height)
+                    .tickFormat(''))
+                .style('stroke-dasharray', '3,3')
+                .style('opacity', 0.1);
+            
+            svg.append('g')
+                .attr('class', 'grid')
+                .call(d3.axisLeft(y)
+                    .ticks(10)
+                    .tickSize(-width)
+                    .tickFormat(''))
+                .style('stroke-dasharray', '3,3')
+                .style('opacity', 0.1);
+        }
+    </script>
+</body>
+</html> 

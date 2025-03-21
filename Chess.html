@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+
+        #chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, 60px);
+            grid-template-rows: repeat(8, 60px);
+            gap: 0;
+            justify-content: center;
+            margin: 20px auto;
+            width: 480px;
+            border: 2px solid black;
+        }
+
+        .cell {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .white {
+            background-color: #ffffff;
+        }
+
+        .black {
+            background-color: #888888;
+            color: white;
+        }
+
+        .piece {
+            cursor: pointer;
+        }
+
+        #message {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chess Game</h1>
+    <div id="chessboard"></div>
+    <p id="message">Click on a piece, then click on a destination cell to move it.</p>
+
+    <script>
+        const chessboard = document.getElementById('chessboard');
+        const message = document.getElementById('message');
+
+        // Initial board setup
+        const initialBoard = [
+            ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'],
+            ['♟', '♟', '♟', '♟', '♟', '♟', '♟', '♟'],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'],
+            ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖']
+        ];
+
+        let selectedCell = null;
+
+        // Create the board
+        function createBoard() {
+            chessboard.innerHTML = '';
+
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.classList.add((row + col) % 2 === 0 ? 'white' : 'black');
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+
+                    const piece = initialBoard[row][col];
+                    if (piece) {
+                        const pieceElement = document.createElement('span');
+                        pieceElement.textContent = piece;
+                        pieceElement.classList.add('piece');
+                        cell.appendChild(pieceElement);
+                    }
+
+                    cell.addEventListener('click', () => onCellClick(cell));
+                    chessboard.appendChild(cell);
+                }
+            }
+        }
+
+        // Handle cell click
+        function onCellClick(cell) {
+            const row = cell.dataset.row;
+            const col = cell.dataset.col;
+
+            if (selectedCell) {
+                movePiece(selectedCell, cell);
+                selectedCell = null;
+                message.textContent = 'Click on a piece to move it.';
+            } else if (cell.querySelector('.piece')) {
+                selectedCell = cell;
+                message.textContent = 'Now select a destination cell.';
+            }
+        }
+
+        // Move piece from one cell to another
+        function movePiece(fromCell, toCell) {
+            const piece = fromCell.querySelector('.piece');
+
+            if (piece) {
+                toCell.innerHTML = '';
+                toCell.appendChild(piece);
+                fromCell.innerHTML = '';
+            }
+        }
+
+        createBoard();
+    </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Using the recommended CDN for Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Calendar</title>
+</head>
+<body>
+
+<div class="hero w-full min-h-[100vh] bg-gradient-to-r from-[#1d0000] to-[#20205b] flex items-center justify-center">
+    <div class="calander w-[300px] h-[250px] bg-[#fff] flex items-center rounded-[10px]">
+        <div class="left flex-col w-[58%] h-full flex items-center justify-center text-[24px]">
+            <p class="text-[100px] leading-[100px] mb-2" id="date">01</p>
+            <p id="day">SUNDAY</p>
+        </div>
+        <div class="right flex-col rounded-tr-[10px] rounded-br-[10px] bg-[#f4351e] text-white w-[42%] h-full flex items-center justify-center text-[24px]">
+            <p id="month">JANUARY</p>
+            <p id="year">2020</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    const date = document.getElementById('date')
+    const day = document.getElementById('day')
+    const month = document.getElementById('month')
+    const year = document.getElementById('year')
+
+    // Get today's date
+    const today = new Date()
+
+    console.log(today);
+
+    // Fixed weekdays array - added THURSDAY which was missing
+    const weekdays = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+    const months = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+
+    // Update date, day, month, and year
+    date.textContent = (today.getDate() < 10 ? "0" : "") + today.getDate()
+    day.textContent = weekdays[today.getDay()]
+    month.textContent = months[today.getMonth()]
+    year.textContent = today.getFullYear()
+</script>
+
+</body>
+</html>

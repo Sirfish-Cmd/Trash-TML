@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CRYPTO TRACKER</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0f172a;
+            color: #f1f5f9;
+        }
+
+        .crypto-card {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .crypto-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.3);
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+
+        .price-up {
+            color: #10B981;
+        }
+
+        .price-down {
+            color: #EF4444;
+        }
+
+        .loading-pulse {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .glass-effect {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .btn-glow {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-glow:after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
+            transform: rotate(30deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                left: -100%;
+                opacity: 0;
+            }
+            10% {
+                left: -100%;
+                opacity: 1;
+            }
+            80% {
+                left: 100%;
+                opacity: 1;
+            }
+            100% {
+                left: 100%;
+                opacity: 0;
+            }
+        }
+
+        .crypto-icon {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900">
+
+<div class="container mx-auto px-4 py-10">
+    <header class="text-center mb-12">
+        <h1 class="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 mb-3">CRYPTO TRACKER</h1>
+        <p class="text-indigo-200 max-w-xl mx-auto">Real-time cryptocurrency price tracker with live updates</p>
+    </header>
+
+    <div class="flex justify-end mb-6">
+        <button id="refreshBtn" class="flex items-center bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 py-3 rounded-lg transition-all btn-glow">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Refresh Prices
+        </button>
+    </div>
+
+    <div id="cryptoCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <!-- Loading placeholders -->
+        <div class="crypto-card glass-effect rounded-xl p-6 shadow-lg loading-pulse">
+            <div class="bg-indigo-900/50 h-6 w-24 rounded mb-4"></div>
+            <div class="bg-indigo-900/50 h-8 w-36 rounded mb-2"></div>
+            <div class="bg-indigo-900/50 h-4 w-28 rounded"></div>
+        </div>
+        <div class="crypto-card glass-effect rounded-xl p-6 shadow-lg loading-pulse">
+            <div class="bg-indigo-900/50 h-6 w-24 rounded mb-4"></div>
+            <div class="bg-indigo-900/50 h-8 w-36 rounded mb-2"></div>
+            <div class="bg-indigo-900/50 h-4 w-28 rounded"></div>
+        </div>
+        <div class="crypto-card glass-effect rounded-xl p-6 shadow-lg loading-pulse">
+            <div class="bg-indigo-900/50 h-6 w-24 rounded mb-4"></div>
+            <div class="bg-indigo-900/50 h-8 w-36 rounded mb-2"></div>
+            <div class="bg-indigo-900/50 h-4 w-28 rounded"></div>
+        </div>
+    </div>
+
+    <div class="glass-effect rounded-xl p-6 shadow-lg mb-12">
+        <h2 class="text-2xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500">Price Comparison</h2>
+        <div class="h-80">
+            <canvas id="priceChart"></canvas>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="glass-effect rounded-xl p-6 shadow-lg">
+            <h2 class="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500">Market Insights</h2>
+            <p class="text-indigo-200 mb-4">Stay updated with the latest trends and market movements in the crypto world.</p>
+            <ul class="space-y-3 text-gray-300">
+                <li class="flex items-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-400 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+                    </svg>
+                    Real-time price updates every minute
+                </li>
+                <li class="flex items-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-400 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                    </svg>
+                    Data sourced from CoinGecko API
+                </li>
+                <li class="flex items-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-400 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+                    </svg>
+                    Visual representations of price trends
+                </li>
+            </ul>
+        </div>
+
+        <div class="glass-effect rounded-xl p-6 shadow-lg">
+            <h2 class="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500">Track Your Favorites</h2>
+            <p class="text-indigo-200 mb-4">Enter cryptocurrency symbols to add them to your watchlist:</p>
+            <div class="flex mb-4">
+                <input type="text" id="cryptoInput" placeholder="e.g., bitcoin" class="flex-grow px-4 py-2 bg-slate-800/80 border border-indigo-500/30 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-white">
+                <button id="addCryptoBtn" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-4 py-2 rounded-r-lg">Add</button>
+            </div>
+            <div id="watchlist" class="mt-4">
+                <!-- Watchlist items will be added here -->
+                <p class="text-indigo-300/70 text-center">Your watchlist is empty</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-16 text-center text-indigo-300/70 text-sm">
+        <p>© 2025 Crypto Tracker. All prices provided by CoinGecko API.</p>
+        <p class="mt-2">This app is for informational purposes only and not financial advice.</p>
+    </footer>
+</div>
+
+<script>
+    // API settings
+    var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin%2Cethereum%2Cdogecoin&vs_currencies=usd&include_24hr_change=true",
+        "method": "GET",
+        "headers": {}
+    };
+
+    // Define crypto details for UI elements
+    const cryptoDetails = {
+        bitcoin: {
+            name: "Bitcoin",
+            symbol: "BTC",
+            icon: "https://assets.coingecko.com/coins/images/1/small/bitcoin.png",
+            color: "text-orange-500",
+            bgColor: "from-orange-500/20 to-orange-600/10"
+        },
+        ethereum: {
+            name: "Ethereum",
+            symbol: "ETH",
+            icon: "https://assets.coingecko.com/coins/images/279/small/ethereum.png",
+            color: "text-blue-500",
+            bgColor: "from-blue-500/20 to-blue-600/10"
+        },
+        dogecoin: {
+            name: "Dogecoin",
+            symbol: "DOGE",
+            icon: "https://assets.coingecko.com/coins/images/5/small/dogecoin.png",
+            color: "text-yellow-500",
+            bgColor: "from-yellow-500/20 to-yellow-600/10"
+        }
+    };
+
+    // Initialize price history for chart
+    let priceHistory = {
+        bitcoin: [],
+        ethereum: [],
+        dogecoin: []
+    };
+
+    // Store previous prices to calculate changes
+    let previousPrices = {};
+
+    // Chart object
+    let priceChart;
+
+    // Function to update UI with crypto prices
+    function updateUI(data) {
+        let cardsHTML = '';
+        
+        // Loop through each cryptocurrency
+        for (const [crypto, priceData] of Object.entries(data)) {
+            if (!cryptoDetails[crypto]) continue;
+            
+            const price = priceData.usd;
+            const change24h = priceData.usd_24h_change;
+            const details = cryptoDetails[crypto];
+            
+            // Determine if price is up or down
+            const isUp = change24h >= 0;
+            const changeClass = isUp ? 'price-up' : 'price-down';
+            const changeIcon = isUp ? 
+                '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" /></svg>' : 
+                '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>';
+            
+            const changeHTML = `<span class="flex items-center ${changeClass}">${changeIcon} ${Math.abs(change24h).toFixed(2)}%</span>`;
+            
+            cardsHTML += `
+                <div class="crypto-card glass-effect rounded-xl p-6 shadow-lg">
+                    <div class="flex items-center mb-4">
+                        <img src="${details.icon}" alt="${details.name}" class="crypto-icon mr-3">
+                        <div>
+                            <h3 class="font-bold ${details.color}">${details.name}</h3>
+                            <span class="text-gray-400 text-sm">${details.symbol}</span>
+                        </div>
+                    </div>
+                    <div class="flex items-baseline mb-1">
+                        <span class="text-2xl font-bold">$${price.toLocaleString()}</span>
+                        <span class="ml-2">${changeHTML}</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">Last updated: ${new Date().toLocaleTimeString()}</p>
+                </div>
+            `;
+        }
+        
+        $("#cryptoCards").html(cardsHTML);
+    }
+
+    // Function to fetch and update crypto prices
+    function fetchCryptoPrices() {
+        // Show loading animation
+        $("#refreshBtn").addClass("animate-pulse");
+
+        $.ajax(settings).done(function(response) {
+            console.log(response);
+            updateUI(response);
+            updateChart(response);
+
+            // Save current prices for comparison next time
+            previousPrices = {...response};
+
+            // Remove loading animation
+            $("#refreshBtn").removeClass("animate-pulse");
+        }).fail(function(error) {
+            console.error("API Error:", error);
+            $("#cryptoCards").html(`
+                <div class="col-span-3 text-center p-8 glass-effect rounded-xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-red-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h3 class="text-xl font-bold mb-2">Failed to load crypto data</h3>
+                    <p class="text-gray-400">Please try again later or check your connection.</p>
+                </div>
+            `);
+            
+            // Remove loading animation
+            $("#refreshBtn").removeClass("animate-pulse");
+        });
+    }
+
+    // Function to initialize and update chart
+    function initChart() {
+        const ctx = document.getElementById('priceChart').getContext('2d');
+
+        priceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'Bitcoin',
+                        data: [],
+                        borderColor: 'rgb(245, 158, 11)',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Ethereum',
+                        data: [],
+                        borderColor: 'rgb(59, 130, 246)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Dogecoin',
+                        data: [],
+                        borderColor: 'rgb(234, 179, 8)',
+                        backgroundColor: 'rgba(234, 179, 8, 0.1)',
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: '#e5e7eb'
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: '#9ca3af'
+                        },
+                        grid: {
+                            color: 'rgba(75, 85, 99, 0.2)'
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: '#9ca3af',
+                            callback: function(value) {
+                                return '$' + value;
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(75, 85, 99, 0.2)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Function to update chart with new data
+    function updateChart(data) {
+        // Get current time for label
+        const now = new Date();
+        const timeLabel = now.getHours() + ':' + now.getMinutes().toString().padStart(2, '0');
+
+        // Add new data point
+        priceChart.data.labels.push(timeLabel);
+
+        // Limit to last 10 data points
+        if (priceChart.data.labels.length > 10) {
+            priceChart.data.labels.shift();
+        }
+
+        // Update datasets
+        priceChart.data.datasets[0].data.push(data.bitcoin?.usd || 0);
+        priceChart.data.datasets[1].data.push(data.ethereum?.usd || 0);
+        priceChart.data.datasets[2].data.push(data.dogecoin?.usd || 0);
+
+        // Keep only last 10 data points
+        priceChart.data.datasets.forEach(dataset => {
+            if (dataset.data.length > 10) {
+                dataset.data.shift();
+            }
+        });
+
+        priceChart.update();
+    }
+
+    // Add crypto to watchlist
+    $('#addCryptoBtn').on('click', function() {
+        const cryptoName = $('#cryptoInput').val().toLowerCase().trim();
+
+        if (cryptoName) {
+            // In a real app, you would check if it's a valid crypto and add it to your API request
+            // For this demo, we'll just show a message
+            $('#watchlist').html(`
+                <div class="p-3 bg-gray-700 rounded-lg mb-2 flex justify-between items-center">
+                    <span>${cryptoName}</span>
+                    <span class="text-gray-400">Added to watchlist</span>
+                </div>
+                <p class="text-gray-400 text-sm">Note: In a full implementation, this would fetch and display the price.</p>
+            `);
+
+            $('#cryptoInput').val('');
+        }
+    });
+
+    // Refresh button click handler
+    $('#refreshBtn').on('click', function() {
+        fetchCryptoPrices();
+    });
+
+    // Initialize chart when page loads
+    $(document).ready(function() {
+        initChart();
+        fetchCryptoPrices();
+
+        // Auto-refresh prices every minute
+        setInterval(fetchCryptoPrices, 60000);
+    });
+</script>
+
+</body>
+</html>

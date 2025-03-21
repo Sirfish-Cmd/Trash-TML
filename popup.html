@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body class="select-none bg-[#3c5077] h-screen flex items-center justify-center">
+<!-- Outer Container -->
+<div class="container w-full h-full flex items-center justify-center">
+    <!-- Button -->
+    <button onclick="openPopup()" type="submit" class="px-6 py-4 bg-white text-[#3c5077] border-0 outline-0 cursor-pointer text-lg font-semibold rounded-full shadow-md hover:bg-gray-100 transition duration-300">
+        ༼ つ ◕_◕ ༽つ
+    </button>
+</div>
+
+<!-- Popup -->
+<div id="popup" class="popup w-[400px] bg-white absolute top-0 left-1/2 -translate-x-1/2 invisible opacity-0 text-center px-6 py-8 text-gray-800 rounded-lg shadow-lg transition-[top,opacity] duration-400 ease-in-out">
+    <!-- Icon -->
+    <p class="text-6xl mb-4 mx-auto w-[100px] h-[100px] flex items-center justify-center rounded-full bg-gray-100 shadow-lg">
+        🛫
+    </p>
+    <!-- Heading -->
+    <h2 class="text-xl font-bold mb-2">THANKS</h2>
+    <!-- Message -->
+    <p class="text-base mb-4">Details are submitted successfully.</p>
+    <!-- Button -->
+    <button onclick="closePopup()" type="button" class="w-full mt-[40px] h-[45px] px-[10px] py-0 bg-[#6fd649] border-0 outline-none text-[18px] text-white font-medium rounded-[4px] cursor-pointer shadow-lg hover:bg-[#324866] transition duration-300">
+        ╰(*°▽°*)╯
+    </button>
+</div>
+
+<script>
+    const popup = document.getElementById('popup');
+    const body = document.body;
+
+    function openPopup() {
+        popup.classList.remove('invisible', 'opacity-0', 'top-0');
+        popup.classList.add('top-[35%]', 'opacity-100');
+        body.classList.add('overflow-hidden'); // Disable scroll
+    }
+
+    function closePopup() {
+        popup.classList.remove('top-[50%]', 'opacity-100');
+        popup.classList.add('invisible', 'opacity-0', 'top-0');
+        body.classList.remove('overflow-hidden'); // Re-enable scroll
+    }
+</script>
+</body>
+</html>

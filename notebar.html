@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Note</title>
+  <link rel="shortcut icon" href="oak-motion-VwFMQXpe1s8-unsplash.jpg" type="image/x-icon">
+</head>
+<body>
+<style>
+  * {
+    margin: 0;
+    box-sizing: border-box;
+    padding: 0;
+    font-family: sans-serif;
+  }
+  body {
+    background: #f7edff;
+  }
+  .buttons button {
+    background: #333;
+    color: #fff;
+    border: none;
+    outline: none;
+    width: 120px;
+    height: 40px;
+    margin: 5px;
+    cursor: pointer;
+  }
+  .buttons button:hover {
+    background: #fff;
+  }
+  .toast {
+    width: 400px;
+    height: 80px;
+    background: #fff;
+    font-weight: 500;
+    margin: 15px 0;
+    box-shadow: 0 0 20px rgba(0,0,0,.2);
+    display: flex;
+    align-items: center;
+    position: relative;
+    transform: translateY(100%);
+    animation: moveleft 0.5s linear forwards;
+  }
+  @keyframes moveleft {
+    100% {
+      transform: translateX(0);
+    }
+  }
+  .toast i {
+    margin: 0 20px;
+    font-size: 35px;
+    color: green;
+  }
+  .toast-error i {
+    color: red;
+  }
+  .invalid-error i {
+    color: orange;
+  }
+  .toast::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 5px;
+    background: green;
+    animation: anim 5s linear forwards;
+  }
+  @keyframes anim {
+    100% {
+      width: 0;
+    }
+  }
+  .toast-error::after {
+    background: red;
+  }
+  .invalid-error::after {
+    background: orange;
+  }
+  }
+</style>
+<div class="buttons m-[50px]">
+  <button onclick="showtoast(successmsg)">Success</button>
+  <button onclick="showtoast(errormsg)">Error</button>
+  <button onclick="showtoast(invalidmsg)">Invalid</button>
+</div>
+<div class="absolute bottom-[30px] right-[30px] items-end flex-col overflow-hidden p-[20px]" id="toasts">
+
+</div>
+
+<script>
+  let toastContainer = document.getElementById("toasts");
+  let successmsg = '<i class=\'bx bx-check\'></i> Successful';
+  let errormsg = '<i class=\'bx bx-x\'></i> Error';
+  let invalidmsg = '<i class=\'bx bx-error\'></i> Invalid';
+
+  function showtoast(msg) {
+    let toast = document.createElement("div");
+    toast.classList.add("toast");
+    toast.innerHTML = msg;
+    toastContainer.appendChild(toast);
+
+    if (msg.includes("Error")) {
+      toast.classList.add("toast-error");
+    }
+    if (msg.includes("Invalid")) {
+      toast.classList.add("invalid-error");
+    }
+
+    setTimeout(function () {
+      toast.remove();
+    }, 5000);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    .calculator input {
+      border: none;
+      outline: none;
+      width: 60px;
+      height: 60px;
+      border-radius: 10px;
+      box-shadow: -8px -8px 15px rgba(255, 255, 255, 0.1), 5px 5px 15px rgba(0, 0, 0, 0.2);
+      background: transparent;
+      font-size: 20px;
+      color: #fff;
+      cursor: pointer;
+      margin: 10px;
+      transition: all 0.3s;
+    }
+
+    .calculator input:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .display input {
+      font-size: 45px;
+    }
+  </style>
+</head>
+<body>
+<div class="container w-full h-screen bg-blue-100 flex items-center justify-center">
+  <div class="calculator bg-gray-800 p-5 rounded-lg shadow-lg">
+    <form>
+      <div class="display flex justify-end mx-5 my-2">
+        <input class="text-right flex-1 shadow-none" type="text" name="display">
+      </div>
+      <div class="grid grid-cols-4 gap-4">
+        <input type="button" value="AC" onclick="display.value = ''" class="text-teal-300">
+        <input type="button" value="DE" onclick="display.value =display.value.toString().slice(0,-1)" class="text-teal-300">
+        <input type="button" value="/" onclick="display.value += '/'" class="text-teal-300">
+        <input type="button" value="." onclick="display.value += '.'" class="text-teal-300">
+
+        <input type="button" value="7" onclick="display.value += '7'">
+        <input type="button" value="8" onclick="display.value += '8'">
+        <input type="button" value="9" onclick="display.value += '9'">
+        <input type="button" value="*" onclick="display.value += '*'" class="text-teal-300">
+
+        <input type="button" value="4" onclick="display.value += '4'">
+        <input type="button" value="5" onclick="display.value += '5'">
+        <input type="button" value="6" onclick="display.value += '6'">
+        <input type="button" value="-" onclick="display.value += '-'" class="text-teal-300">
+
+        <input type="button" value="1" onclick="display.value += '1'">
+        <input type="button" value="2" onclick="display.value += '2'">
+        <input type="button" value="3" onclick="display.value += '3'">
+        <input type="button" value="+" onclick="display.value += '+'" class="text-teal-300">
+
+        <input type="button" value="00" onclick="display.value += '00'">
+        <input type="button" value="0" onclick="display.value += '0'">
+        <input class="equal col-span-2" type="button" value="=" onclick="display.value = eval(display.value)" class="text-teal-300">
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

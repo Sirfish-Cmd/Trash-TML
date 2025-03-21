@@ -1,0 +1,24 @@
+#A1
+{
+display: block;
+text-align: center;
+font-size: 10em;
+font-family: 'Courier New', Courier, monospace;
+}
+#B1
+{
+    text-align: center;
+}
+button
+{
+    padding: 30px 30px;
+    border-radius: 7px;
+    font-size: 1.5ex;
+    background-color: #ff0000;
+    cursor:auto;
+    transition: background colour 0.25s;
+}
+button:hover
+{
+    background-color: #860000;
+}

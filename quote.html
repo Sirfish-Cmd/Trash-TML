@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap');
+    </style>
+    <link rel="icon" href="riccardo-pelati-_-Cg7vTw3bs-unsplash.jpg">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Quote</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @layer utilities {
+            .translate-center {
+                transform: translate(-50%, -50%);
+            }
+            .custom-shadow {
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            }
+            .qh2::after {
+                content: "";
+                width: 75px;
+                height: 3px;
+                border-radius: 3px;
+                background: rgba(23,124,229);
+                position: absolute;
+                bottom: -10px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            .bqh::after, .bqh::before {
+                content: '"';
+            }
+            .sqh::before {
+                content: '';
+                width: 20px;
+                height: 2px;
+                background: rgba(23,124,229);
+                position: absolute;
+                top: 50%;
+                left: -30px;
+            }
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #bbc6fa;
+            font-family: "Playfair", serif;
+        }
+        .quote-box button:nth-child(2) {
+            background: transparent;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quote-box bg-white w-[700px] absolute left-1/2 top-1/2 translate-center custom-shadow p-10 rounded-lg text-center">
+    <h2 class="relative text-[32px] mb-[40px] font-bold qh2">Quote of the Day</h2>
+    <blockquote class="bqh text-[26px] min-h-[110px]">Loading...</blockquote>
+    <span class="sqh block relative float-right mt-[10px]">Loading...</span>
+    <div class="w-full mt-12 flex justify-center">
+        <button class="text-white bg-[#177ce5] rounded-full border border-[#177ce5] w-36 h-12 flex items-center justify-center m-1 cursor-pointer" onclick="fetchQuote()">NEW</button>
+        <button class="text-white bg-[#177ce5] rounded-full border border-[#177ce5] w-36 h-12 flex items-center justify-center m-1 cursor-pointer" onclick="tweet()">💋</button>
+    </div>
+</div>
+
+<script>
+    async function fetchQuote() {
+        try {
+            const response = await fetch('http://localhost:5000/quote');
+            const data = await response.json();
+            console.log(data);
+            document.querySelector('blockquote').innerText = data.quoteText;
+            document.querySelector('span').innerText = data.quoteAuthor || 'Unknown';
+        } catch (error) {
+            console.error('Error fetching the quote:', error);
+            document.querySelector('blockquote').innerText = "Something went wrong. Please try again later.";
+            document.querySelector('span').innerText = "";
+        }
+    }
+    fetchQuote();
+
+    getquote();
+    function tweet()  {
+        window.open("https://twitter.com/intent/tweet?text=" + document.querySelector('blockquote').innerText);
+    }
+</script>
+
+</body>
+</html>

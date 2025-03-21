@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display 3rd Random Image</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        #image-container {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="image-container">
+        <p>Loading image...</p>
+        <!-- The 3rd random image will be inserted here by JavaScript -->
+    </div>
+
+    <script>
+        // Function to fetch random images from Picsum API
+        async function fetchRandomImages() {
+            try {
+                const imageContainer = document.getElementById('image-container');
+                imageContainer.innerHTML = '<p>Loading image...</p>'; // Show loading message
+
+                // Fetch 3 random images from Picsum API
+                const imageUrls = [];
+                for (let i = 0; i < 3; i++) {
+                    const response = await fetch('https://picsum.photos/500/300?random=' + i);
+                    imageUrls.push(response.url); // Store the image URL
+                }
+
+                // Display the 3rd image
+                const thirdImageUrl = imageUrls[2]; // Get the 3rd image URL
+                const imgElement = document.createElement('img');
+                imgElement.src = thirdImageUrl;
+                imgElement.alt = 'Random Image from Picsum';
+                imageContainer.innerHTML = ''; // Clear loading message
+                imageContainer.appendChild(imgElement);
+            } catch (error) {
+                console.error('Error fetching images:', error);
+                document.getElementById('image-container').innerHTML = '<p>Failed to load image. Please try again.</p>';
+            }
+        }
+
+        // Call the function to fetch and display the 3rd random image
+        fetchRandomImages();
+    </script>
+</body>
+</html>
