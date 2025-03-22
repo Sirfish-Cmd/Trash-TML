@@ -241,4 +241,169 @@ class TrussVisualizer {
 // Export the visualizer
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = TrussVisualizer;
-} 
+}
+
+// Import D3.js for visualization
+import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7/+esm';
+
+// Create technology radar chart
+function createRadarChart(containerId, data) {
+    const width = 500;
+    const height = 500;
+    const margin = { top: 50, right: 50, bottom: 50, left: 50 };
+    
+    // Clear existing content
+    d3.select(`#${containerId}`).html('');
+    
+    // Create SVG
+    const svg = d3.select(`#${containerId}`)
+        .append('svg')
+        .attr('width', width)
+        .attr('height', height);
+    
+    // Create scales
+    const radius = Math.min(width, height) / 2 - Math.max(margin.top, margin.right);
+    const angleSlice = Math.PI * 2 / Object.keys(data).length;
+    
+    const rScale = d3.scaleLinear()
+        .range([0, radius])
+        .domain([0, 1]);
+    
+    // Create groups for each axis
+    const axes = svg.selectAll('.axis')
+        .data(Object.keys(data))
+        .enter()
+        .append('g')
+        .attr('class', 'axis')
+        .attr('transform', (d, i) => {
+            const angle = i * angleSlice;
+            return `translate(${width/2 + rScale(1.1) * Math.cos(angle - Math.PI/2)},
+                             ${height/2 + rScale(1.1) * Math.sin(angle - Math.PI/2)})`;
+        });
+    
+    // Add axis lines
+    axes.append('line')
+        .attr('x1', 0)
+        .attr('y1', 0)
+        .attr('x2', (d, i) => rScale(1) * Math.cos(i * angleSlice - Math.PI/2))
+        .attr('y2', (d, i) => rScale(1) * Math.sin(i * angleSlice - Math.PI/2))
+        .attr('class', 'line')
+        .style('stroke', '#ccc')
+        .style('stroke-width', '1px');
+    
+    // Add axis labels
+    axes.append('text')
+        .attr('class', 'legend')
+        .style('text-anchor', 'middle')
+        .style('font-size', '12px')
+        .text(d => d);
+    
+    // Create the radar chart path
+    const radarLine = d3.lineRadial()
+        .radius(d => rScale(d))
+        .angle((d, i) => i * angleSlice - Math.PI/2);
+    
+    // Add the radar chart area
+    svg.append('path')
+        .datum(Object.values(data))
+        .attr('class', 'radar-area')
+        .attr('d', radarLine)
+        .style('fill', '#3B82F6')
+        .style('fill-opacity', 0.3)
+        .style('stroke', '#3B82F6')
+        .style('stroke-width', '2px');
+}
+
+// Create stack comparison visualization
+function createStackComparison(containerId, recommendedStack, similarStacks) {
+    const container = d3.select(`#${containerId}`);
+    container.html('');
+    
+    // Create table
+    const table = container.append('table')
+        .attr('class', 'min-w-full divide-y divide-gray-200');
+    
+    // Add header
+    table.append('thead')
+        .append('tr')
+        .selectAll('th')
+        .data(['Category', 'Recommended', 'Similar Stacks'])
+        .enter()
+        .append('th')
+        .attr('class', 'px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider')
+        .text(d => d);
+    
+    // Add rows
+    const rows = table.append('tbody')
+        .selectAll('tr')
+        .data(Object.keys(recommendedStack))
+        .enter()
+        .append('tr')
+        .attr('class', 'bg-white divide-y divide-gray-200');
+    
+    // Add cells
+    rows.selectAll('td')
+        .data(d => [
+            d,
+            recommendedStack[d][0].name,
+            similarStacks.map(stack => stack.stack[d].join(', ')).join(' | ')
+        ])
+        .enter()
+        .append('td')
+        .attr('class', 'px-6 py-4 whitespace-nowrap text-sm text-gray-500')
+        .text(d => d);
+}
+
+// Create risk assessment visualization
+function createRiskAssessment(containerId, risks) {
+    const container = d3.select(`#${containerId}`);
+    container.html('');
+    
+    // Create cards for each category
+    Object.entries(risks).forEach(([category, techRisks]) => {
+        const card = container.append('div')
+            .attr('class', 'bg-white rounded-lg shadow p-4 mb-4');
+        
+        card.append('h3')
+            .attr('class', 'text-lg font-semibold text-gray-900 mb-4')
+            .text(category);
+        
+        // Create risk indicators for each technology
+        techRisks.forEach(tech => {
+            const techDiv = card.append('div')
+                .attr('class', 'mb-4');
+            
+            techDiv.append('h4')
+                .attr('class', 'font-medium text-gray-700')
+                .text(tech.name);
+            
+            // Create risk indicators
+            Object.entries(tech.risks).forEach(([riskType, value]) => {
+                const indicator = techDiv.append('div')
+                    .attr('class', 'flex items-center mt-2');
+                
+                indicator.append('span')
+                    .attr('class', 'text-sm text-gray-600 w-24')
+                    .text(riskType);
+                
+                indicator.append('div')
+                    .attr('class', 'flex-1 h-2 bg-gray-200 rounded-full')
+                    .append('div')
+                    .attr('class', `h-full rounded-full ${
+                        value === 'High' ? 'bg-red-500' :
+                        value === 'Medium' ? 'bg-yellow-500' :
+                        'bg-green-500'
+                    }`)
+                    .style('width', value === 'High' ? '100%' :
+                           value === 'Medium' ? '60%' : '30%');
+            });
+        });
+    });
+}
+
+// Export visualization functions
+export {
+    createRadarChart,
+    createStackComparison,
+    createRiskAssessment
+}; 

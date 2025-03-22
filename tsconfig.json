@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "outDir": "./dist", // Output compiled files to a 'dist' folder
+    "strict": true,
+    "esModuleInterop": true
+  },
+  "include": ["btnripplethingy.ts", "imgrndthing.ts"]
+}

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Stack Recommender</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: #f5f6fa;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .question-section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .result-section {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+
+        .company-stack {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .company-card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .tech-item {
+            display: inline-block;
+            background: #f1f2f6;
+            padding: 5px 10px;
+            margin: 5px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="question-section">
+            <h1>Tech Stack Recommender</h1>
+            <form id="techForm">
+                <div class="form-group">
+                    <label for="projectType">Project Type:</label>
+                    <select id="projectType">
+                        <option value="web">Web Application</option>
+                        <option value="mobile">Mobile App</option>
+                        <option value="ecom">E-commerce</option>
+                        <option value="blog">Blog/Content</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="scale">Expected Scale:</label>
+                    <select id="scale">
+                        <option value="small">Small (1k users/month)</option>
+                        <option value="medium">Medium (10k users/month)</option>
+                        <option value="large">Large (100k+ users/month)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Need Real-time Features?</label>
+                    <label><input type="radio" name="realtime" value="yes"> Yes</label>
+                    <label><input type="radio" name="realtime" value="no" checked> No</label>
+                </div>
+
+                <button type="submit">Get Recommendation</button>
+            </form>
+        </div>
+
+        <div class="result-section" id="resultSection">
+            <h2>Recommended Tech Stack</h2>
+            <div id="recommendation"></div>
+            
+            <h3>Famous Company Stacks</h3>
+            <div class="company-stack" id="companyStacks"></div>
+        </div>
+    </div>
+
+    <script>
+        const techStacks = {
+            web: {
+                small: ['React', 'Express', 'SQLite'],
+                medium: ['Next.js', 'Node.js', 'PostgreSQL'],
+                large: ['Angular', 'Django', 'MySQL', 'Redis']
+            },
+            mobile: {
+                small: ['React Native', 'Firebase'],
+                medium: ['Flutter', 'Node.js', 'MongoDB'],
+                large: ['Kotlin/Swift', 'GraphQL', 'AWS']
+            },
+            ecom: ['Shopify', 'React', 'Node.js', 'MongoDB', 'Redis'],
+            blog: ['WordPress', 'Static Site Generators', 'Netlify']
+        };
+
+        const companyStacks = [
+            {
+                name: "Netflix",
+                stack: ["React", "Node.js", "AWS", "GraphQL", "Cassandra"],
+                type: "large"
+            },
+            {
+                name: "Airbnb",
+                stack: ["React", "Ruby on Rails", "Redis", "AWS"],
+                type: "large"
+            },
+            {
+                name: "Shopify",
+                stack: ["React", "Ruby on Rails", "GraphQL", "MySQL"],
+                type: "ecom"
+            },
+            {
+                name: "WordPress",
+                stack: ["PHP", "MySQL", "JavaScript", "Apache"],
+                type: "blog"
+            }
+        ];
+
+        document.getElementById('techForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const projectType = document.getElementById('projectType').value;
+            const scale = document.getElementById('scale').value;
+            const realtime = document.querySelector('input[name="realtime"]:checked').value;
+
+            let recommendation;
+            
+            if (projectType === 'ecom' || projectType === 'blog') {
+                recommendation = techStacks[projectType];
+            } else {
+                recommendation = techStacks[projectType][scale];
+            }
+
+            if (realtime === 'yes') {
+                recommendation.push('WebSocket', 'Redis');
+            }
+
+            displayRecommendation(recommendation);
+            displayCompanyStacks(projectType);
+            document.getElementById('resultSection').style.display = 'block';
+        });
+
+        function displayRecommendation(stack) {
+            const container = document.getElementById('recommendation');
+            container.innerHTML = stack.map(tech => 
+                `<div class="tech-item">${tech}</div>`
+            ).join('');
+        }
+
+        function displayCompanyStacks(type) {
+            const container = document.getElementById('companyStacks');
+            const filteredCompanies = companyStacks.filter(company => 
+                company.type === type
+            );
+
+            container.innerHTML = filteredCompanies.map(company => `
+                <div class="company-card">
+                    <h4>${company.name}</h4>
+                    ${company.stack.map(tech => 
+                        `<div class="tech-item">${tech}</div>`
+                    ).join('')}
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>

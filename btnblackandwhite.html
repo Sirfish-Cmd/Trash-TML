@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en" class="transition-colors duration-300">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Mode Toggle</title>
+    <link href="./dist/output.css" rel="stylesheet">
+    <style>
+        @keyframes toggle {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(40px);
+            }
+        }
+        @keyframes toggleoff {
+            0% {
+                transform: translateX(40px);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+        #darkmode:checked + label .circle {
+            animation: toggle 0.4s linear forwards;
+        }
+        .circle {
+            animation: toggleoff 0.4s linear forwards;
+        }
+
+        /* Default light mode styles */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #1a202c;
+        }
+
+        /* Dark mode styles */
+        :root.dark {
+            --bg-color: #1a202c;
+            --text-color: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+    </style>
+</head>
+<body class="m-0 flex justify-center items-center min-h-screen transition-colors duration-300">
+    <div class="flex flex-col items-center gap-4">
+        <h1 class="text-2xl font-bold">Dark Mode Toggle</h1>
+        <div class="flex items-center gap-2">
+            <span class="text-sm">Light</span>
+            <input type="checkbox" id="darkmode" class="sr-only peer" aria-label="Toggle dark mode">
+            <label for="darkmode" class="cursor-pointer relative w-20 h-10 bg-gray-300 rounded-full peer-checked:bg-blue-500 transition-colors duration-300">
+                <span class="circle absolute w-8 h-8 bg-white rounded-full top-1 left-1 transition-transform duration-300 peer-checked:translate-x-10 shadow-md"></span>
+            </label>
+            <span class="text-sm">Dark</span>
+        </div>
+    </div>
+    <script src="btnblackandwhirthg.js"></script>
+</body>
+</html>

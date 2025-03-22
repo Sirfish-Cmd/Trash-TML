@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Stack Recommender</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .progress-bar {
+            transition: width 0.3s ease-in-out;
+        }
+        .question-card {
+            display: none;
+        }
+        .question-card.active {
+            display: block;
+        }
+        .option-card {
+            transition: all 0.3s ease;
+        }
+        .option-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .option-card.selected {
+            border-color: #3B82F6;
+            background-color: #EBF5FF;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-code text-blue-600 text-2xl mr-2"></i>
+                        <h1 class="text-xl font-semibold text-gray-900">Tech Stack Recommender</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button id="saveBtn" class="text-gray-600 hover:text-gray-900">
+                            <i class="fas fa-save mr-1"></i> Save Progress
+                        </button>
+                        <button id="resumeBtn" class="text-gray-600 hover:text-gray-900">
+                            <i class="fas fa-play mr-1"></i> Resume
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-gray-700">Progress</span>
+                    <span id="progressText" class="text-sm font-medium text-gray-700">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div id="progressBar" class="progress-bar bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <!-- Project Type Question -->
+                <div class="question-card active" id="projectType">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">What type of project are you building?</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="option-card p-4 border rounded-lg cursor-pointer" data-value="web">
+                            <i class="fas fa-globe text-2xl text-blue-600 mb-2"></i>
+                            <h3 class="font-semibold text-lg">Web Application</h3>
+                            <p class="text-gray-600">Browser-based applications and websites</p>
+                        </div>
+                        <div class="option-card p-4 border rounded-lg cursor-pointer" data-value="mobile">
+                            <i class="fas fa-mobile-alt text-2xl text-blue-600 mb-2"></i>
+                            <h3 class="font-semibold text-lg">Mobile App</h3>
+                            <p class="text-gray-600">iOS and Android applications</p>
+                        </div>
+                        <div class="option-card p-4 border rounded-lg cursor-pointer" data-value="desktop">
+                            <i class="fas fa-desktop text-2xl text-blue-600 mb-2"></i>
+                            <h3 class="font-semibold text-lg">Desktop Application</h3>
+                            <p class="text-gray-600">Native desktop software</p>
+                        </div>
+                        <div class="option-card p-4 border rounded-lg cursor-pointer" data-value="ai">
+                            <i class="fas fa-brain text-2xl text-blue-600 mb-2"></i>
+                            <h3 class="font-semibold text-lg">AI/ML Project</h3>
+                            <p class="text-gray-600">Machine learning and artificial intelligence</p>
+                        </div>
+                        <div class="option-card p-4 border rounded-lg cursor-pointer" data-value="blockchain">
+                            <i class="fas fa-link text-2xl text-blue-600 mb-2"></i>
+                            <h3 class="font-semibold text-lg">Blockchain</h3>
+                            <p class="text-gray-600">DApps and smart contracts</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Size Question -->
+                <div class="question-card" id="teamSize">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">What's your team size and experience level?</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="option-card p-4 border rounded-lg cursor-pointer" data-value="solo">
+                            <i class="fas fa-user text-2xl text-blue-600 mb-2"></i>
+                            <h3 class="font-semibold text-lg">Solo Developer</h3>
+                            <p class="text-gray-600">Working independently</p>
+                        </div>
+                        <div class="option-card p-4 border rounded-lg cursor-pointer" data-value="small">
+                            <i class="fas fa-users text-2xl text-blue-600 mb-2"></i>
+                            <h3 class="font-semibold text-lg">Small Team (2-5)</h3>
+                            <p class="text-gray-600">Tight-knit development team</p>
+                        </div>
+                        <div class="option-card p-4 border rounded-lg cursor-pointer" data-value="medium">
+                            <i class="fas fa-users-cog text-2xl text-blue-600 mb-2"></i>
+                            <h3 class="font-semibold text-lg">Medium Team (6-15)</h3>
+                            <p class="text-gray-600">Growing development team</p>
+                        </div>
+                        <div class="option-card p-4 border rounded-lg cursor-pointer" data-value="large">
+                            <i class="fas fa-building text-2xl text-blue-600 mb-2"></i>
+                            <h3 class="font-semibold text-lg">Large Team (15+)</h3>
+                            <p class="text-gray-600">Enterprise-level development</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="mt-8 flex justify-between">
+                    <button id="prevBtn" class="px-4 py-2 text-gray-600 hover:text-gray-900" style="display: none;">
+                        <i class="fas fa-arrow-left mr-2"></i> Previous
+                    </button>
+                    <button id="nextBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Next <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Add this after the main content section -->
+        <div id="resultsSection" class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8" style="display: none;">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Your Recommended Tech Stack</h2>
+                
+                <!-- Technology Radar Chart -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Technology Assessment</h3>
+                    <div id="radarChart" class="w-full h-96"></div>
+                </div>
+                
+                <!-- Stack Comparison -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Stack Comparison</h3>
+                    <div id="stackComparison" class="overflow-x-auto"></div>
+                </div>
+                
+                <!-- Risk Assessment -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Risk Assessment</h3>
+                    <div id="riskAssessment"></div>
+                </div>
+                
+                <!-- Similar Company Stacks -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Similar Company Stacks</h3>
+                    <div id="similarStacks" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Similar stacks will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- Export Options -->
+                <div class="flex justify-end space-x-4">
+                    <button id="exportPDF" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                        <i class="fas fa-file-pdf mr-2"></i> Export as PDF
+                    </button>
+                    <button id="exportSVG" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                        <i class="fas fa-file-image mr-2"></i> Export as SVG
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Question data
+        const questions = [
+            {
+                id: 'projectType',
+                title: 'What type of project are you building?',
+                options: [
+                    { value: 'web', label: 'Web Application', icon: 'globe', description: 'Browser-based applications and websites' },
+                    { value: 'mobile', label: 'Mobile App', icon: 'mobile-alt', description: 'iOS and Android applications' },
+                    { value: 'desktop', label: 'Desktop Application', icon: 'desktop', description: 'Native desktop software' },
+                    { value: 'ai', label: 'AI/ML Project', icon: 'brain', description: 'Machine learning and artificial intelligence' },
+                    { value: 'blockchain', label: 'Blockchain', icon: 'link', description: 'DApps and smart contracts' }
+                ]
+            },
+            {
+                id: 'teamSize',
+                title: 'What\'s your team size and experience level?',
+                options: [
+                    { value: 'solo', label: 'Solo Developer', icon: 'user', description: 'Working independently' },
+                    { value: 'small', label: 'Small Team (2-5)', icon: 'users', description: 'Tight-knit development team' },
+                    { value: 'medium', label: 'Medium Team (6-15)', icon: 'users-cog', description: 'Growing development team' },
+                    { value: 'large', label: 'Large Team (15+)', icon: 'building', description: 'Enterprise-level development' }
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let answers = {};
+
+        // Initialize the application
+        function init() {
+            // Load saved progress
+            const savedProgress = localStorage.getItem('techStackRecommender');
+            if (savedProgress) {
+                answers = JSON.parse(savedProgress);
+                updateUI();
+            }
+
+            // Add event listeners
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.addEventListener('click', () => selectOption(card));
+            });
+
+            document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+            document.getElementById('prevBtn').addEventListener('click', prevQuestion);
+            document.getElementById('saveBtn').addEventListener('click', saveProgress);
+            document.getElementById('resumeBtn').addEventListener('click', resumeProgress);
+
+            updateProgressBar();
+        }
+
+        // Update the UI based on current state
+        function updateUI() {
+            // Show/hide questions
+            document.querySelectorAll('.question-card').forEach((card, index) => {
+                card.classList.toggle('active', index === currentQuestion);
+            });
+
+            // Update navigation buttons
+            document.getElementById('prevBtn').style.display = currentQuestion === 0 ? 'none' : 'block';
+            document.getElementById('nextBtn').textContent = currentQuestion === questions.length - 1 ? 'Get Recommendations' : 'Next';
+
+            // Update selected options
+            document.querySelectorAll('.option-card').forEach(card => {
+                const value = card.dataset.value;
+                card.classList.toggle('selected', answers[questions[currentQuestion].id] === value);
+            });
+
+            updateProgressBar();
+        }
+
+        // Handle option selection
+        function selectOption(card) {
+            const value = card.dataset.value;
+            answers[questions[currentQuestion].id] = value;
+            updateUI();
+        }
+
+        // Navigate to next question
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                updateUI();
+            } else {
+                // Generate recommendations
+                generateRecommendations();
+            }
+        }
+
+        // Navigate to previous question
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                updateUI();
+            }
+        }
+
+        // Update progress bar
+        function updateProgressBar() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            document.getElementById('progressText').textContent = `${Math.round(progress)}%`;
+        }
+
+        // Save progress to localStorage
+        function saveProgress() {
+            localStorage.setItem('techStackRecommender', JSON.stringify(answers));
+            alert('Progress saved successfully!');
+        }
+
+        // Resume saved progress
+        function resumeProgress() {
+            const savedProgress = localStorage.getItem('techStackRecommender');
+            if (savedProgress) {
+                answers = JSON.parse(savedProgress);
+                // Find the last answered question
+                for (let i = 0; i < questions.length; i++) {
+                    if (!answers[questions[i].id]) {
+                        currentQuestion = i;
+                        break;
+                    }
+                }
+                updateUI();
+            }
+        }
+
+        // Generate recommendations based on answers
+        function generateRecommendations() {
+            // TODO: Implement recommendation logic
+            console.log('Generating recommendations based on:', answers);
+        }
+
+        // Initialize the application when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+
+    <!-- Add this before the closing body tag -->
+    <script type="module">
+        import { generateRecommendations } from './recommendation-engine.js';
+        import { createRadarChart, createStackComparison, createRiskAssessment } from './visualization.js';
+        
+        // Update the generateRecommendations function in the main script
+        window.generateRecommendations = function() {
+            const results = generateRecommendations(answers);
+            
+            // Show results section
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            // Create visualizations
+            createRadarChart('radarChart', {
+                'Frontend': results.recommendations.frontend[0].score,
+                'Backend': results.recommendations.backend[0].score,
+                'Database': results.recommendations.database[0].score,
+                'Infrastructure': results.recommendations.infrastructure[0].score
+            });
+            
+            createStackComparison('stackComparison', results.recommendations, results.similarStacks);
+            createRiskAssessment('riskAssessment', results.riskAssessment);
+            
+            // Populate similar stacks
+            const similarStacksContainer = document.getElementById('similarStacks');
+            similarStacksContainer.innerHTML = results.similarStacks.map(stack => `
+                <div class="bg-white rounded-lg shadow p-4">
+                    <h4 class="font-semibold text-lg text-gray-900 mb-2">${stack.name}</h4>
+                    <p class="text-sm text-gray-600 mb-4">${stack.industry}</p>
+                    <div class="space-y-2">
+                        ${Object.entries(stack.stack).map(([category, techs]) => `
+                            <div>
+                                <span class="text-sm font-medium text-gray-700">${category}:</span>
+                                <span class="text-sm text-gray-600">${techs.join(', ')}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        };
+        
+        // Add export functionality
+        document.getElementById('exportPDF').addEventListener('click', () => {
+            // TODO: Implement PDF export
+            alert('PDF export functionality coming soon!');
+        });
+        
+        document.getElementById('exportSVG').addEventListener('click', () => {
+            // TODO: Implement SVG export
+            alert('SVG export functionality coming soon!');
+        });
+    </script>
+</body>
+</html> 

@@ -1,7 +1,7 @@
-var btn = document.querySelector('.btn');
-btn.addEventListener("mouseover", function (e) {
-    var x = e.pageX - btn.offsetLeft;
-    var y = e.pageY - btn.offsetTop;
-    btn.style.setProperty("--x", "".concat(x, "px"));
-    btn.style.setProperty("--y", "".concat(y, "px"));
+const btn = document.querySelector('.btn');
+btn.addEventListener("mouseover", (e) => {
+    const x = e.pageX - btn.offsetLeft;
+    const y = e.pageY - btn.offsetTop;
+    btn.style.setProperty("--x", `${x}px`);
+    btn.style.setProperty("--y", `${y}px`);
 });
