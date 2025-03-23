@@ -6,5 +6,6 @@
     "strict": true,
     "esModuleInterop": true
   },
-  "include": ["btnripplethingy.ts", "imgrndthing.ts"]
+  "include": ["./**/*.ts"], // Include all .ts files
+  "exclude": ["node_modules"] // Exclude only node_modules
 }

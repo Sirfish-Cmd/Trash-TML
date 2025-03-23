@@ -1,12 +1,13 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
-    "./btnblackandwhite.html",
-    "./btnblackandwhirthg.js"
+    "./**/*.html",
+    "./**/*.js",
+    "./**/*.ts",
   ],
   darkMode: 'class',
   theme: {
     extend: {},
   },
   plugins: [],
-} 
+};
