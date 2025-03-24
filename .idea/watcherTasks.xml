@@ -22,14 +22,14 @@
       <envs />
     </TaskOptions>
     <TaskOptions isEnabled="true">
-      <option name="arguments" value="-i ./src/input.css -o ./custum-css/custom.css --watch" />
+      <option name="arguments" value="-i ./src/input.css -o ./dist/output.css --watch" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" />
       <option name="exitCodeBehavior" value="ERROR" />
       <option name="fileExtension" value="css" />
       <option name="immediateSync" value="true" />
       <option name="name" value="TailwindCSS" />
-      <option name="output" value="./custum-css/custom.css" />
+      <option name="output" value="" />
       <option name="outputFilters">
         <array />
       </option>

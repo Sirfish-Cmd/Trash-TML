@@ -1,13 +1,17 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   content: [
-    "./**/*.html",
-    "./**/*.js",
-    "./**/*.ts",
+    "./btnblackandwhite.html",
+    "./btnblackandwhirthg.js",
+    "./realtimecounyrtte.html"
   ],
   darkMode: 'class',
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'pink': '#FFC0CB',
+      },
+    },
   },
   plugins: [],
-};
+}
