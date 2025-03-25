@@ -1,16 +1,18 @@
 {
-  "name": "trash-tml",
+  "name": "web-tml",
   "version": "1.0.0",
   "description": "Web development projects with Tailwind CSS",
   "main": "index.js",
   "scripts": {
-    "dev": "tailwindcss -i ./src/styles/input.css -o ./public/dist/output.css --watch",
-    "build": "tailwindcss -i ./src/styles/input.css -o ./public/dist/output.css --minify"
+    "dev": "tailwindcss -i ./src/input.css -o ./public/dist/output.css --watch",
+    "build": "tailwindcss -i ./src/input.css -o ./public/dist/output.css --minify"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "tailwindcss": "^3.4.1"
+  "devDependencies": {
+    "tailwindcss": "^3.4.1",
+    "autoprefixer": "^10.4.17",
+    "postcss": "^8.4.35"
   }
-} 
+}

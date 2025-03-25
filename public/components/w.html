@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Weather App</h1>
+        <div class="search">
+            <input type="text" placeholder="Enter city name" spellcheck="false">
+            <button>🔍</button>
+        </div>
+    </header>
+    <main>
+        <div class="weather-info" style="display: none;">
+            <div class="icon">🌧️</div>
+            <div class="details">
+                <h2 class="city">City</h2>
+                <p class="temp">Temperature: <span>22°C</span></p>
+                <p class="feels_like">Feels Like: <span>20°C</span></p>
+                <p class="description">Description: <span>Cloudy</span></p>
+                <p class="humidity">Humidity: <span>50%</span></p>
+                <p class="wind">Wind Speed: <span>15 km/h</span></p>
+                <p class="pressure">Pressure: <span>1020 hPa</span></p>
+                <p class="sunrise">Sunrise: <span>06:00 AM</span></p>
+                <p class="sunset">Sunset: <span>06:00 PM</span></p>
+            </div>
+        </div>
+    </main>
+    <script src="../js/script.js"></script>
+</body>
+
+</html>
+<style>
+    /* Reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(to right, #4facfe, #00f2fe);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    header {
+        background: rgba(0, 0, 0, 0.5);
+        padding: 1rem;
+        text-align: center;
+    }
+
+    header h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .search {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+
+    .search input {
+        padding: 0.5rem;
+        width: 200px;
+        border: none;
+        border-radius: 5px;
+        margin-right: 0.5rem;
+    }
+
+    .search button {
+        padding: 0.5rem;
+        border: none;
+        background: #007acc;
+        color: #fff;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .search button:hover {
+        background: #005f99;
+    }
+
+    main {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .weather-info {
+        background: rgba(0, 0, 0, 0.5);
+        padding: 2rem;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    .weather-info .icon {
+        font-size: 5rem;
+        margin-bottom: 1rem;
+    }
+
+    .weather-info .details {
+        font-size: 1.2rem;
+    }
+
+    .weather-info .details p {
+        margin: 0.5rem 0;
+    }
+
+    .weather-info .details span {
+        font-weight: bold;
+    }
+</style>
+<script>
+    const apiKey = "15f30f2c345e4745b6f590b057174f77";
+    const apiUri = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+    const searchbox = document.querySelector(".search input");
+    const searchBtn = document.querySelector(".search button");
+    const weatherInfo = document.querySelector(".weather-info");
+    const weatherIcon = document.querySelector(".icon");
+    const cityElem = document.querySelector(".city");
+    const tempElem = document.querySelector(".temp span");
+    const feelsLikeElem = document.querySelector(".feels_like span");
+    const descriptionElem = document.querySelector(".description span");
+    const humidityElem = document.querySelector(".humidity span");
+    const windElem = document.querySelector(".wind span");
+    const pressureElem = document.querySelector(".pressure span");
+    const sunriseElem = document.querySelector(".sunrise span");
+    const sunsetElem = document.querySelector(".sunset span");
+
+    async function checkWeather(city) {
+        const response = await fetch(apiUri + city + `&appid=${apiKey}`);
+        const data = await response.json();
+        console.log(data);
+
+        cityElem.innerHTML = data.name + " 🌆";
+        tempElem.innerHTML = Math.round(data.main.temp) + '°C 🌡️';
+        feelsLikeElem.innerHTML = Math.round(data.main.feels_like) + '°C 🔥';
+        descriptionElem.innerHTML = data.weather[0].description + " 📃";
+        humidityElem.innerHTML = data.main.humidity + '% 💧';
+        windElem.innerHTML = data.wind.speed + ' km/h 🍃';
+        pressureElem.innerHTML = data.main.pressure + ' hPa 🌬️';
+        sunriseElem.innerHTML = new Date(data.sys.sunrise * 1000).toLocaleTimeString() + " 🌅";
+        sunsetElem.innerHTML = new Date(data.sys.sunset * 1000).toLocaleTimeString() + " 🌇";
+
+        if (data.weather[0].main == "Clouds") {
+            weatherIcon.innerHTML = "☁️";
+        } else if (data.weather[0].main == "Rain") {
+            weatherIcon.innerHTML = "☔";
+        } else if (data.weather[0].main == "Clear") {
+            weatherIcon.innerHTML = "🌞";
+        } else if (data.weather[0].main == "Drizzle") {
+            weatherIcon.innerHTML = "🌧️";
+        } else if (data.weather[0].main == "Mist") {
+            weatherIcon.innerHTML = "🌫️";
+        } else if (data.weather[0].main == "Snow") {
+            weatherIcon.innerHTML = "⛄";
+        } else if (data.weather[0].main == "Thunderstorm") {
+            weatherIcon.innerHTML = "⚡";
+        } else if (data.weather[0].main == "Fog") {
+            weatherIcon.innerHTML = "🌁";
+        } else {
+            weatherIcon.innerHTML = "🌈"; // For any other weather condition
+        }
+
+        weatherInfo.style.display = "block";
+    }
+
+    searchBtn.addEventListener("click", () => {
+        checkWeather(searchbox.value);
+    });
+
+    searchbox.addEventListener("keypress", (event) => {
+        if (event.key === "Enter") {
+            checkWeather(searchbox.value);
+        }
+    });
+
+</script>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <link href="../../public/dist/output.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CUMMINS</title>
+    <link rel="shortcut icon"
+        href="./australian cricket team logo - Google Search/au1288adfc-australia-logo-australia-national-cricket-team-logopedia-.png"
+        type="image/x-icon">
+</head>
+
+<body>
+
+    <div class="hero w-full h-[100vh] px-[10px] py-[10%] text-white bg-cover bg-center relative"
+        style="background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://img1.hscicdn.com/image/upload/f_auto/lsci/db/PICTURES/CMS/331500/331576.jpg');">
+        <!-- Your content here -->
+        <form name="submit-to-google-sheet"
+            class="bg-white flex w-fit text-black rounded-lg shadow-lg overflow-hidden absolute top-[32%] left-[1%]">
+            <input class="border-0 outline-none px-[10px] py-[20px] h-[70px] w-[300px] text-[16px] rounded-l-lg"
+                type="email" name="Email" placeholder="Enter your email address" required>
+            <button
+                class="text-white bg-yellow-500 border-none outline-none h-[70px] w-[100px] cursor-pointer rounded-r-lg"
+                type="submit">✪ ω ✪</button>
+        </form>
+        <span id="msg" class="text-yellow-300 mt-[10px] block absolute top-[43%] left-[1%]"></span>
+        <h3 class="mt-[15%] font-[400] text-[30px]">CUMMINS</h3><br>
+        <hr class="w-full text-yellow-300">
+        <h1 class="mt-[15px] text-[50px]">BRAND NEW<br>GOAL ON ITS WAY</h1>
+        <p class="text-yellow-300 mx-[10px] my-0 mt-[40px]">FOLLOW FOR MORE CUMMINS</p>
+    </div>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwvtmW7NBJeSsx8yQnKuJHC6QOdkFr1hUPYLDk3-Gvs-AYz9J4aQ9Fgzi9BRs8c_BE3LA/exec'
+        const form = document.forms['submit-to-google-sheet']
+        const msg = document.getElementById('msg')
+
+        form.addEventListener('submit', e => {
+            e.preventDefault()
+            fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+                .then(response => {
+                    msg.innerHTML = 'THANK YOU FOR SUPPORTING CUMMINS'
+                    setTimeout(() => { msg.innerHTML = '' }, 5000)
+                    form.reset()
+                })
+                .catch(error => console.error('Error!', error.message))
+        })
+    </script>
+
+</body>
+
+</html>

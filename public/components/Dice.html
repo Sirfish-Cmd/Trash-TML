@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="../styles/Dice1.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="con">
+        <h1>Dice Fucker</h1>
+        <label>Num of Dice:</label>
+        <input type="number" id="num" value="1" min="1" max="10">
+        <button type="button" onclick="rolldice()">>Fuck DICE<< /button>
+    </div>
+    <div id="re"></div>
+    <div id="img"></div>
+
+    <!-- Hidden div with dice image URLs -->
+    <div id="dice-images" style="display: none;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Alea_1.png" alt="dice-1" id="dice-1">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/Alea_2.png" alt="dice-2" id="dice-2">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Alea_3.png" alt="dice-3" id="dice-3">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/8d/Alea_4.png" alt="dice-4" id="dice-4">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Alea_5.png" alt="dice-5" id="dice-5">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/f/f4/Alea_6.png" alt="dice-6" id="dice-6">
+    </div>
+
+    <script src="../js/Dice2.js"></script>
+</body>
+
+</html>

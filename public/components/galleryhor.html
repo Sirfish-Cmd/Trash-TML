@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery Slider</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style>
+        .gallery::-webkit-scrollbar {
+            display: none;
+        }
+
+        p {
+            width: 50px;
+            cursor: pointer;
+            margin: 40px;
+        }
+    </style>
+</head>
+
+<body class="bg-[#191919] flex items-center justify-center h-screen"> <!-- Updated body class -->
+    <div class="gallerywrap flex items-center justify-center mx-[10%]">
+        <p id="back" class="text-7xl">👈🏻</p>
+        <div class="gallery w-[900px] flex overflow-x-auto"> <!-- Fixed scrollbar -->
+            <div class="flex-none w-full grid grid-cols-3 auto-cols-auto gap-[20px] p-[10px]">
+                <span><img
+                        class="grayscale-100 transform-[0.5s] w-full hover:grayscale-0 hover:cursor-pointer hover:scale-[1.1] "
+                        src="../assets/images/martha-dominguez-de-gouveia-nMyM7fxpokE-unsplash.jpg"
+                        alt="Image 1"></span>
+                <span><img
+                        class="grayscale-100 transform-[0.5s] w-full hover:grayscale-0 hover:cursor-pointer hover:scale-[1.1] "
+                        src="../assets/images/martha-dominguez-de-gouveia-nMyM7fxpokE-unsplash.jpg"
+                        alt="Image 2"></span>
+                <span><img
+                        class="grayscale-100 transform-[0.5s] w-full hover:grayscale-0 hover:cursor-pointer hover:scale-[1.1] "
+                        src="../assets/images/martha-dominguez-de-gouveia-nMyM7fxpokE-unsplash.jpg"
+                        alt="Image 3"></span>
+            </div>
+            <div class="flex-none w-full grid grid-cols-3 auto-cols-auto gap-[20px] p-[10px]">
+                <span><img
+                        class="grayscale-100 transform-[0.5s] w-full hover:grayscale-0 hover:cursor-pointer hover:scale-[1.1]"
+                        src="../assets/images/martha-dominguez-de-gouveia-nMyM7fxpokE-unsplash.jpg"
+                        alt="Image 1"></span>
+                <span><img
+                        class="grayscale-100 transform-[0.5s] w-full hover:grayscale-0 hover:cursor-pointer hover:scale-[1.1]"
+                        src="../assets/images/martha-dominguez-de-gouveia-nMyM7fxpokE-unsplash.jpg"
+                        alt="Image 2"></span>
+                <span><img
+                        class="grayscale-100 transform-[0.5s] w-full hover:grayscale-0 hover:cursor-pointer hover:scale-[1.1]"
+                        src="../assets/images/martha-dominguez-de-gouveia-nMyM7fxpokE-unsplash.jpg"
+                        alt="Image 3"></span>
+            </div>
+        </div>
+        <p id="next" class="text-7xl">👉🏻</p>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let gallery = document.querySelector('.gallery');
+            let next = document.querySelector('#next');
+            let back = document.querySelector('#back');
+
+            if (!gallery || !next || !back) {
+                console.error('One or more required elements not found');
+                return;
+            }
+
+            gallery.addEventListener('wheel', (evt) => {
+                evt.preventDefault();
+                gallery.style.scrollBehavior = 'auto';
+                gallery.scrollLeft += evt.deltaY;
+            });
+
+            next.addEventListener('click', () => {
+                gallery.style.scrollBehavior = 'smooth';
+                gallery.scrollLeft += 900;
+            });
+
+            back.addEventListener('click', () => {
+                gallery.style.scrollBehavior = 'smooth';
+                gallery.scrollLeft -= 900;
+            });
+        });
+    </script>
+</body>
+
+</html>

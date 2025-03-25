@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "outDir": "./public/js",
+    "rootDir": "./public",
+    "strict": true,
+    "esModuleInterop": true,
+    "jsx": "react",
+    "moduleResolution": "node"
+  },
+  "include": [
+    "./public/**/*.ts",
+    "./public/**/*.tsx",
+    "./public/components/**/*.ts",
+    "./public/components/**/*.tsx"
+  ],
+  "exclude": ["node_modules"]
+}
