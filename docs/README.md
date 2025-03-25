@@ -1,41 +1,87 @@
-# 💫 About Me:
+# Trash-TML 🚀
 
-👋 Hey there, I'm Sir Fish!<br><br>💻 I love coding and creating cool projects. <br>🌱 Currently learning new tech and exploring awesome ideas. <br>🚀 Check out my repositories to see what I'm up to! <br><br>📫 Let's connect: Originalkingfisher@gmail.com <br>✨ Happy coding! 😎<br>
+A modern web development playground featuring TypeScript, Tailwind CSS, and React components.
 
-## 🌐 Socials:
+## Features
 
-[![email](https://img.shields.io/badge/Email-D14836?logo=gmail&logoColor=white)](mailto:OriginalKingFisher@gmail.com)
+- 🎨 Modern UI components with Tailwind CSS
+- 📱 Responsive design
+- 🌙 Dark mode support
+- ⚡ TypeScript for type safety
+- 🔄 Real-time features
+- 🎮 Interactive elements
 
-# 💻 Tech Stack:
+## Tech Stack
 
-![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white) ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white) ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) ![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white) ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white) ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white) ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
+- TypeScript
+- Tailwind CSS
+- React
+- HTML5
+- CSS3
+- JavaScript (ES6+)
 
-# 📊 GitHub Stats:
+## Project Structure
 
-![](https://github-readme-stats.vercel.app/api?username=Zafeer Adil Janjua&theme=gruvbox_light&hide_border=true&include_all_commits=true&count_private=true)<br/>
-![](https://nirzak-streak-stats.vercel.app/?user=Zafeer Adil Janjua&theme=gruvbox_light&hide_border=true)<br/>
-![](https://github-readme-stats.vercel.app/api/top-langs/?username=Zafeer Adil Janjua&theme=gruvbox_light&hide_border=true&include_all_commits=true&count_private=true&layout=compact)
+```
+Trash-TML/
+├── src/
+│   ├── components/     # HTML components
+│   ├── layouts/        # Layout templates
+│   ├── js/            # JavaScript files
+│   ├── ts/            # TypeScript files
+│   ├── styles/        # CSS and Tailwind files
+│   ├── assets/        # Images and media
+│   └── react/         # React components
+├── public/
+│   └── dist/         # Compiled assets
+├── config/           # Configuration files
+├── docs/            # Documentation
+└── tests/           # Test files
+```
 
-## 🏆 GitHub Trophies
+## Getting Started
 
-![](https://github-profile-trophy.vercel.app/?username=Zafeer Adil Janjua&theme=gruvbox_light&no-frame=true&no-bg=true&margin-w=4)
+1. Clone the repository:
 
-### ✍️ Random Dev Quote
+```bash
+git clone https://github.com/yourusername/Trash-TML.git
+```
 
-![](https://quotes-github-readme.vercel.app/api?type=horizontal&theme=dark)
+2. Install dependencies:
 
-### 🔝 Top Contributed Repo
+```bash
+npm install
+```
 
-![](https://github-contributor-stats.vercel.app/api?username=Zafeer Adil Janjua&limit=5&theme=gruvbox_light&combine_all_yearly_contributions=true)
+3. Start development:
 
----
+```bash
+npm run dev
+```
 
-[![](https://visitcount.itsvg.in/api?id=Zafeer Adil Janjua&icon=4&color=0)](https://visitcount.itsvg.in)
+4. Build for production:
 
-<!-- Proudly created with GPRM ( https://gprm.itsvg.in ) -->
+```bash
+npm run build
+```
 
-- <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Sirfish-Cmd/Sirfish-Cmd/output/github-snake-dark.svg" />
-    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Sirfish-Cmd/Sirfish-Cmd/output/github-snake.svg" />
-    <img alt="github-snake" src="https://raw.githubusercontent.com/Sirfish-Cmd/Sirfish-Cmd/output/github-snake.svg" />
-  </picture>
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run watch` - Watch for changes
+- `npm run test` - Run tests
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
+
+## Acknowledgments
+
+- [Tailwind CSS](https://tailwindcss.com/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [React](https://reactjs.org/)
