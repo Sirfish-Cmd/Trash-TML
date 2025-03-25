@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RNGCR</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        .color-container {
+        background-color: orange; /* bg-[orange] */
+        width: 300px;             /* w-[300px] */
+        height: 150px;            /* h-[150px] */
+        color: white;             /* text-white */
+        margin: 5px;              /* m-[5px] */
+        display: flex;            /* flex */
+        justify-content: center;  /* justify-center */
+        align-items: center;      /* item-center (should be align-items) */
+        font-size: 25px;          /* text-[25px] */
+        border-radius: 10px;      /* rounded-[10px] */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); /* text-shadow-medium */
+        border-style: solid;      /* border-solid */
+        border-width: 2px;        /* border-[2px] */
+        border-color: black;      /* border-black */
+        }
+
+      </style>      
+</head>
+<body class="m-0">
+    <h1 class="item-center">RRCGR</h1>
+    <div class="container flex flex-wrap justify-center">
+
+    </div>
+</body>
+<script>
+
+const container=document.querySelector(".container");
+
+for(let index=0;index<30;index++){
+    const colorcontainer = document.createElement("div");
+    colorcontainer.classList.add("color-contaier");
+    colorcontainer.appendChild("colorcontainer");
+}
+
+const colorcontainers=document.querySelectorAll(".color-contaier")
+
+function ggcc(){
+    colorcontainers.forEach(()=>{
+        const newcc= randomcc();
+        colorcontainers.style.backgroundColor="#"+newcc;
+        colorcontainers.innerHTML ="#"+newcc;
+    });
+}
+
+function randomcc(){
+    const chars="1234567890abcdef";
+    const cclength=6;
+    let cc="";
+    for(let i=0;i<cclength;i++){
+        const randomnum=Math.floor(Math.random()*cclength);
+        cc+=chars.substring(randomnum + randomnum + 1);
+        }
+    return cc;
+}
+
+</script>
+</html>
