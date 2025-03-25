@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>War Board Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 20px 0;
+        }
+
+        #board {
+            display: grid;
+            grid-template-columns: repeat(5, 100px);
+            grid-template-rows: repeat(5, 100px);
+            gap: 5px;
+            justify-content: center;
+            margin: 20px auto;
+            border: 2px solid black;
+            width: 520px;
+            height: 520px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid black;
+            font-size: 14px;
+            font-weight: bold;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+
+        .player1 {
+            background-color: #ffcccc;
+        }
+
+        .player2 {
+            background-color: #cce5ff;
+        }
+
+        #message {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>War Board Game</h1>
+    <div id="board"></div>
+    <p id="message">Player 1's turn. Select a territory to attack from.</p>
+
+    <script>
+        const board = document.getElementById('board');
+        const message = document.getElementById('message');
+
+        // Initialize board state
+        const boardState = [
+            ['player1', 'player1', '', '', 'player2'],
+            ['player1', '', '', '', 'player2'],
+            ['', '', '', '', ''],
+            ['player2', '', '', '', 'player1'],
+            ['player2', 'player2', '', '', 'player1']
+        ];
+
+        let currentPlayer = 'player1';
+        let selectedCell = null;
+
+        // Create the board
+        function createBoard() {
+            board.innerHTML = '';
+            for (let row = 0; row < 5; row++) {
+                for (let col = 0; col < 5; col++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+
+                    if (boardState[row][col] === 'player1') {
+                        cell.classList.add('player1');
+                    } else if (boardState[row][col] === 'player2') {
+                        cell.classList.add('player2');
+                    }
+
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+                    board.appendChild(cell);
+
+                    cell.addEventListener('click', () => handleCellClick(row, col));
+                }
+            }
+        }
+
+        // Handle cell click
+        function handleCellClick(row, col) {
+            if (!selectedCell) {
+                // Select a cell to attack from
+                if (boardState[row][col] === currentPlayer) {
+                    selectedCell = { row, col };
+                    message.textContent = `${currentPlayer} selected a territory. Choose a target.`;
+                } else {
+                    message.textContent = `Select one of your own territories.`;
+                }
+            } else {
+                // Attack logic
+                if (isAdjacent(selectedCell.row, selectedCell.col, row, col) && boardState[row][col] !== currentPlayer) {
+                    const attackRoll = Math.floor(Math.random() * 6) + 1;
+                    const defenseRoll = Math.floor(Math.random() * 6) + 1;
+
+                    if (attackRoll > defenseRoll) {
+                        boardState[row][col] = currentPlayer; // Attack successful
+                        message.textContent = `${currentPlayer} won the battle!`;
+                    } else {
+                        message.textContent = `${currentPlayer} lost the battle.`;
+                    }
+
+                    currentPlayer = currentPlayer === 'player1' ? 'player2' : 'player1';
+                    selectedCell = null;
+                    message.textContent += ` ${currentPlayer}'s turn.`;
+
+                    createBoard();
+                } else {
+                    message.textContent = `Invalid move. Select an adjacent enemy territory.`;
+                }
+            }
+        }
+
+        // Check if two cells are adjacent
+        function isAdjacent(row1, col1, row2, col2) {
+            const rowDiff = Math.abs(row1 - row2);
+            const colDiff = Math.abs(col1 - col2);
+            return (rowDiff + colDiff === 1);
+        }
+
+        createBoard();
+    </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+body
+{
+    font-family: Verdana, Geneva, Tahoma, sans-serif; 
+}
+h1
+{
+    color: white;
+}
+form
+{
+    background-color: rgb(132, 255, 0) ;
+    max-width: 350px;
+    text-align: center;
+    margin: auto;
+    margin-top: 220px;
+    padding: 25px;
+    box-shadow: 5px 5px 15px rgba(255, 255, 255, 0.7);
+    border-radius: 10px;
+}
+Html
+{
+    background-color: black;
+}
+#A1
+{
+    font-size: 2em;
+    border: 2px solid gold;
+    width: 50%;
+    margin-bottom: 10px;
+}
+label
+{
+font-size: 1.5em;
+font-weight: bold;
+}
+button
+{
+    font-size: 2em;
+    border: none;
+    cursor: pointer;
+    padding: 9px;
+    border-radius: 25px;
+    color: gold;
+    box-shadow: 5px 5px 15px rgba(74, 67, 67, 0.7);
+margin-top: 15px;
+}
+button:hover
+{
+ color: goldenrod;
+}
+#B1
+{
+    font-size: 2em;
+    font-weight: bold;
+}
+

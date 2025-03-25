@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Collector</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #message {
+            margin-top: 1rem;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .success { background-color: #dff0d8; color: #3c763d; }
+        .error { background-color: #f2dede; color: #a94442; }
+    </style>
+</head>
+<body>
+    <h1>Subscribe to Our Newsletter</h1>
+    <form id="emailForm">
+        <div class="form-group">
+            <input type="email" id="email" name="email" 
+                   placeholder="Enter your email" required>
+        </div>
+        <button type="submit">Subscribe</button>
+    </form>
+    <div id="message"></div>
+
+    <script>
+        const form = document.getElementById('emailForm');
+        const messageDiv = document.getElementById('message');
+
+        // Function to validate email
+        function isValidEmail(email) {
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return regex.test(email);
+        }
+
+        // Function to show messages
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = type;
+            messageDiv.style.display = 'block';
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Handle form submission
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            
+            // Validate email
+            if (!isValidEmail(email)) {
+                showMessage('Please enter a valid email address', 'error');
+                return;
+            }
+
+            // Save email
+            saveEmail(email);
+        });
+
+        // Function to save email to JSON
+        function saveEmail(email) {
+            // Get existing emails from localStorage
+            let emails = JSON.parse(localStorage.getItem('emails') || '[]');
+            
+            // Check for duplicates
+            if (emails.includes(email)) {
+                showMessage('This email is already subscribed', 'error');
+                return;
+            }
+
+            // Add new email
+            emails.push(email);
+            
+            // Save back to localStorage
+            localStorage.setItem('emails', JSON.stringify(emails));
+            
+            // Show success message
+            showMessage('Thank you for subscribing!', 'success');
+            
+            // Clear form
+            form.reset();
+        }
+
+        // Optional: Export emails to JSON file
+        function exportEmails() {
+            const emails = JSON.parse(localStorage.getItem('emails') || '[]');
+            const dataStr = JSON.stringify(emails, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'emails.json';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Add export button (optional)
+        const exportBtn = document.createElement('button');
+        exportBtn.textContent = 'Export Emails';
+        exportBtn.style.marginTop = '20px';
+        exportBtn.style.backgroundColor = '#008CBA';
+        exportBtn.onclick = exportEmails;
+        document.body.appendChild(exportBtn);
+    </script>
+</body>
+</html>

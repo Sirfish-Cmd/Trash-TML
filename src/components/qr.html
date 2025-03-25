@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://unpkg.com/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            box-sizing: border-box;
+        }
+        body {
+            background: #1a202c; /* Darker background for better contrast */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 400px;
+            padding: 30px 40px; /* Increased padding for a better look */
+            background: #2d3748; /* Darker container background for contrast */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added subtle shadow for depth */
+        }
+        .container p {
+            color: #e2e8f0; /* Lighter text color */
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background-color: #3182ce;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #2b6cb0; /* Slightly darker on hover */
+        }
+        .imgbox.show-img {
+            max-height: 300px;
+            margin: 10px auto;
+            border: 1px solid #d1d1d1;
+        }
+        .imgbox {
+            transition: max-height 1s;
+            max-height: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <p class="font-bold text-lg mb-2">Enter Text or URL</p>
+    <input id="qrtext" class="w-full h-12 border border-solid outline-none p-2 mt-2 mb-3 rounded" type="text" placeholder="Enter Text or URL">
+    <div id="imgbox" class="imgbox rounded-[5px] max-h-0 overflow-hidden">
+        <img class="w-full h-auto p-[10px]" src="" alt="" id="qrimg">
+    </div>
+    <button onclick="generateQR()" class="btn">GENERATE</button>
+</div>
+
+<script>
+    let imgbox = document.getElementById("imgbox");
+    let qrimg = document.getElementById("qrimg");
+    let qrtext = document.getElementById("qrtext");
+
+    function generateQR() {
+        qrimg.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + qrtext.value;
+        imgbox.classList.add('show-img');
+    }
+</script>
+</body>
+</html>

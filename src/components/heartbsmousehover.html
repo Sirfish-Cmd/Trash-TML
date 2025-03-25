@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HEART HOVER</title>
+</head>
+
+<style>
+    @keyframes animation {
+        0%{
+            transform: translate(-50%, -50%);
+            opacity: 1;
+            filter: hue-rotate(0);
+        }
+        100%{
+            transform: translate(-50%, -50000%);
+            opacity: 0;
+            filter: hue-rotate(360deg);
+        }
+    }
+    span {
+        background-color: white;
+        pointer-events: none;
+        background-image: url('https://cdn3.iconfinder.com/data/icons/outline-location-icon-set/64/Hunting_1-512.png');
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        background-size: cover;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        animation: animation 6s running;
+    }
+</style>
+<body class="m-0 h-[100vh] bg-black overflow-hidden">
+
+<script src="../js/haerathousehover.js"></script>
+
+</body>
+</html>

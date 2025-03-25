@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Pat Cummins Jersey - Product Page</title>
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <style>
+    /* Size selection styling */
+    .sizeselect p {
+      width: 70px;
+    }
+    .sizeselect input {
+      position: absolute;
+      opacity: 0;
+    }
+    .sizeselect input:checked + span {
+      font-weight: 600;
+      color: #553ff0;
+      border: 1px solid #553ff0;
+    }
+    .sizeselect span {
+      padding: 5px;
+      margin-right: 10px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+    .sizeselect span:hover {
+      background-color: #f0f0f0;
+    }
+
+    /* Color selection styling */
+    .colorselect p {
+      width: 75px;
+    }
+    .colorselect input {
+      position: absolute;
+      opacity: 0;
+    }
+    .colorselect span {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      margin-right: 15px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+    .colorselect input:checked + span {
+      transform: scale(0.9);
+      box-shadow: 0 0 0 3px #fff, 0 0 0 5px #553ff0;
+    }
+    
+    /* Image gallery controls */
+    .controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+    }
+    .gallery-btn {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background-color: #777;
+    }
+    .gallery-btn.active {
+      background-color: #553ff0;
+      transform: scale(1.2);
+    }
+    .gallery-btn:hover {
+      transform: scale(1.2);
+      background-color: #999;
+    }
+    
+    /* Quantity selector */
+    .quantity-input {
+      background-color: #eee;
+      border: none;
+      outline: none;
+      padding: 8px 12px;
+      width: 60px;
+      border-radius: 0;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .quantity-input:focus {
+      box-shadow: 0 0 0 2px rgba(85, 63, 240, 0.3);
+    }
+    
+    /* Gallery */
+    .gallery {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s ease;
+    }
+    .gallery img {
+      transition: all 0.5s ease;
+    }
+    
+    /* Buttons */
+    .add-to-cart-btn {
+      background-color: #553ff0;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(85, 63, 240, 0.2);
+    }
+    .add-to-cart-btn:hover {
+      background-color: #4433d0;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(85, 63, 240, 0.3);
+    }
+    .add-to-cart-btn:active {
+      transform: translateY(0);
+    }
+    
+    /* Price tag */
+    .price-tag {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .original-price {
+      text-decoration: line-through;
+      color: #999;
+      font-size: 18px;
+    }
+    .discount-badge {
+      background-color: #00d874;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .product {
+        flex-direction: column;
+      }
+      .gallery, .details {
+        width: 100%;
+      }
+      .details {
+        padding: 30px;
+      }
+    }
+  </style>
+</head>
+<body class="bg-[#d0eaff]">
+
+<main class="container w-full min-h-screen flex items-center justify-center py-8">
+  <div class="product w-[90%] max-w-[750px] flex flex-col md:flex-row">
+    <!-- Product Gallery -->
+    <section class="gallery relative scale-[1.08] shadow-2xl basis-[47%] bg-[#241e20] rounded-lg overflow-hidden">
+      <img id="productImg" class="w-full block pt-[100px]" src="../assets/images/Adobe%20Express%20-%20file.png" alt="Pat Cummins jersey product image">
+      <div class="controls absolute bottom-[40px] right-[20px]">
+        <button type="button" class="gallery-btn active" data-img="Adobe%20Express%20-%20file.png" aria-label="View first product image"></button>
+        <button type="button" class="gallery-btn" data-img="Adobe%20Express%20-%20file%20(1).png" aria-label="View second product image"></button>
+        <button type="button" class="gallery-btn" data-img="Adobe%20Express%20-%20file%20(2).png" aria-label="View third product image"></button>
+      </div>
+    </section>
+    
+    <!-- Product Details -->
+    <section class="details text-[15px] font-[500] text-[#777] basis-[53%] bg-white p-[40px] pl-[60px] shadow-2xl rounded-lg">
+      <h1 class="text-[#333] text-[35px] font-bold">PAT CUMMINS JERSEY</h1>
+      
+      <div class="price-tag my-4">
+        <h2 class="text-[#553ff0] text-[30px] font-[600]">$15.00</h2>
+        <span class="original-price">$21.50</span>
+        <span class="discount-badge">30% OFF</span>
+      </div>
+      
+      <div class="rating flex mb-4" aria-label="Product rated 4 out of 5 stars">
+        <span class="text-yellow-500">★★★★</span><span class="text-gray-300">★</span>
+        <span class="text-sm ml-2">(42 reviews)</span>
+      </div>
+      
+      <p class="mb-6 text-[15px] leading-relaxed">
+        Official jersey of Pat Cummins, the Australian cricket team captain. 
+        High-quality fabric with authentic team design. Limited edition available now!
+      </p>
+      
+      <form id="productForm">
+        <!-- Size Selection -->
+        <div class="sizeselect flex items-center mt-[30px]">
+          <p id="size-label">SIZE</p>
+          <div class="flex flex-wrap" role="radiogroup" aria-labelledby="size-label">
+            <label for="small" class="mr-2">
+              <input type="radio" name="size" id="small" value="S" aria-labelledby="size-label small-label">
+              <span id="small-label">S</span>
+            </label>
+            <label for="medium" class="mr-2">
+              <input type="radio" name="size" id="medium" value="M" checked aria-labelledby="size-label medium-label">
+              <span id="medium-label">M</span>
+            </label>
+            <label for="large" class="mr-2">
+              <input type="radio" name="size" id="large" value="L" aria-labelledby="size-label large-label">
+              <span id="large-label">L</span>
+            </label>
+            <label for="xlarge" class="mr-2">
+              <input type="radio" name="size" id="xlarge" value="XL" aria-labelledby="size-label xlarge-label">
+              <span id="xlarge-label">XL</span>
+            </label>
+            <label for="xxx">
+              <input type="radio" name="size" id="xxx" value="XXL" aria-labelledby="size-label xxx-label">
+              <span id="xxx-label">XXL</span>
+            </label>
+          </div>
+        </div>
+        
+        <!-- Color Selection -->
+        <div class="colorselect flex items-center mt-[20px]">
+          <p id="color-label">COLOR</p>
+          <div class="flex" role="radiogroup" aria-labelledby="color-label">
+            <label for="yellow" title="Yellow">
+              <input type="radio" name="color" id="yellow" value="yellow" aria-labelledby="color-label" aria-label="Yellow color">
+              <span style="background: yellow;"></span>
+            </label>
+            <label for="blue" title="Blue">
+              <input type="radio" name="color" id="blue" value="blue" checked aria-labelledby="color-label" aria-label="Blue color">
+              <span style="background: blue;"></span>
+            </label>
+            <label for="red" title="Red">
+              <input type="radio" name="color" id="red" value="red" aria-labelledby="color-label" aria-label="Red color">
+              <span style="background: red;"></span>
+            </label>
+            <label for="green" title="Green">
+              <input type="radio" name="color" id="green" value="green" aria-labelledby="color-label" aria-label="Green color">
+              <span style="background: green;"></span>
+            </label>
+          </div>
+        </div>
+        
+        <!-- Quantity Selection -->
+        <div class="flex items-center mt-[20px]">
+          <label for="quantityInput" class="w-[75px]">QUANTITY</label>
+          <div class="flex items-center" role="group" aria-labelledby="quantity-controls">
+            <span id="quantity-controls" class="sr-only">Product quantity controls</span>
+            <button type="button" id="decreaseBtn" class="bg-gray-200 px-3 py-1 rounded-l-md" aria-label="Decrease quantity">-</button>
+            <input type="number" id="quantityInput" name="quantity" value="1" min="1" max="10" 
+                  class="quantity-input" title="Product quantity" aria-label="Product quantity">
+            <button type="button" id="increaseBtn" class="bg-gray-200 px-3 py-1 rounded-r-md" aria-label="Increase quantity">+</button>
+          </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="mt-8 flex gap-4">
+          <button type="submit" class="add-to-cart-btn flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            </svg>
+            Add to Cart
+          </button>
+          <button type="button" class="border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-100 transition" aria-label="Add to wishlist">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748z"/>
+            </svg>
+          </button>
+        </div>
+      </form>
+      
+      <!-- Additional Info -->
+      <div class="mt-6">
+        <span class="text-sm">In Stock: <span class="text-green-600 font-medium">Available</span></span>
+        <p class="text-sm mt-2">Free shipping on orders over $50</p>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+  // Product image gallery control
+  const productImg = document.getElementById('productImg');
+  const galleryBtns = document.querySelectorAll('.gallery-btn');
+
+  galleryBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const imgSrc = this.getAttribute('data-img');
+      productImg.src = imgSrc;
+
+      // Update active button
+      galleryBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // Quantity control
+  const quantityInput = document.getElementById('quantityInput');
+  const decreaseBtn = document.getElementById('decreaseBtn');
+  const increaseBtn = document.getElementById('increaseBtn');
+
+  decreaseBtn.addEventListener('click', function() {
+    let value = parseInt(quantityInput.value);
+    if (value > 1) {
+      quantityInput.value = value - 1;
+    }
+  });
+
+  increaseBtn.addEventListener('click', function() {
+    let value = parseInt(quantityInput.value);
+    if (value < 10) {
+      quantityInput.value = value + 1;
+    }
+  });
+
+  // Form submission
+  const productForm = document.getElementById('productForm');
+
+  productForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Get selected options
+    const size = document.querySelector('input[name="size"]:checked').value;
+    const color = document.querySelector('input[name="color"]:checked').value;
+    const quantity = quantityInput.value;
+
+    // Display confirmation message
+    alert(`Added to cart: ${quantity} Pat Cummins jersey(s) in size ${size}, color ${color}`);
+
+    // Here you would typically add code to update cart, send data to backend, etc.
+  });
+</script>
+
+</body>
+</html>

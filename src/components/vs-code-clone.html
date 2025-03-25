@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VS Code Clone</title>
+    <style>
+        :root {
+            --bg-color: #1e1e1e;
+            --sidebar-color: #252526;
+            --activity-bar-color: #333333;
+            --editor-bg: #1e1e1e;
+            --text-color: #d4d4d4;
+            --line-number-color: #858585;
+            --selection-color: #264f78;
+            --active-tab-color: #1e1e1e;
+            --inactive-tab-color: #2d2d2d;
+            --status-bar-color: #007acc;
+            --menu-bar-color: #3c3c3c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .menu-bar {
+            background-color: var(--menu-bar-color);
+            padding: 4px 8px;
+            display: flex;
+            font-size: 12px;
+        }
+        
+        .menu-bar div {
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .activity-bar {
+            background-color: var(--activity-bar-color);
+            width: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 10px;
+        }
+        
+        .activity-icon {
+            width: 30px;
+            height: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border-left: 2px solid transparent;
+        }
+        
+        .activity-icon.active {
+            border-left: 2px solid var(--status-bar-color);
+        }
+        
+        .sidebar {
+            background-color: var(--sidebar-color);
+            width: 250px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+        
+        .sidebar-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            padding: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .file-tree {
+            font-size: 13px;
+        }
+        
+        .folder, .file {
+            padding: 3px 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .folder:hover, .file:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .folder::before {
+            content: "📁 ";
+            margin-right: 5px;
+        }
+        
+        .file::before {
+            content: "📄 ";
+            margin-right: 5px;
+        }
+        
+        .editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--editor-bg);
+        }
+        
+        .tabs {
+            display: flex;
+            background-color: var(--bg-color);
+            border-bottom: 1px solid #383838;
+        }
+        
+        .tab {
+            padding: 8px 15px;
+            font-size: 12px;
+            background-color: var(--inactive-tab-color);
+            border-right: 1px solid #383838;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .tab.active {
+            background-color: var(--active-tab-color);
+            border-bottom: 1px solid var(--status-bar-color);
+        }
+        
+        .tab::before {
+            content: "📄 ";
+            margin-right: 5px;
+        }
+        
+        .editor {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+        
+        .line-numbers {
+            background-color: var(--editor-bg);
+            color: var(--line-number-color);
+            padding: 10px 8px;
+            text-align: right;
+            user-select: none;
+            font-size: 14px;
+        }
+        
+        #code-editor {
+            flex: 1;
+            background-color: var(--editor-bg);
+            color: var(--text-color);
+            border: none;
+            outline: none;
+            padding: 10px;
+            font-size: 14px;
+            resize: none;
+            white-space: pre;
+            tab-size: 4;
+        }
+        
+        .status-bar {
+            background-color: var(--status-bar-color);
+            padding: 3px 10px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .status-left, .status-right {
+            display: flex;
+        }
+        
+        .status-item {
+            margin-right: 15px;
+        }
+        
+        /* Syntax highlighting */
+        .keyword { color: #569cd6; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; }
+        .function { color: #dcdcaa; }
+        .variable { color: #9cdcfe; }
+        .number { color: #b5cea8; }
+    </style>
+</head>
+<body>
+    <div class="menu-bar">
+        <div>File</div>
+        <div>Edit</div>
+        <div>Selection</div>
+        <div>View</div>
+        <div>Go</div>
+        <div>Run</div>
+        <div>Terminal</div>
+        <div>Help</div>
+    </div>
+    
+    <div class="main-container">
+        <div class="activity-bar">
+            <div class="activity-icon active" title="Explorer">📁</div>
+            <div class="activity-icon" title="Search">🔍</div>
+            <div class="activity-icon" title="Source Control">⑂</div>
+            <div class="activity-icon" title="Run">▶</div>
+            <div class="activity-icon" title="Extensions">⧉</div>
+        </div>
+        
+        <div class="sidebar">
+            <div class="sidebar-title">Explorer: VS Code Clone</div>
+            <div class="file-tree">
+                <div class="folder" onclick="toggleFolder(this)">src</div>
+                <div class="file" onclick="loadFile('index.html')">index.html</div>
+                <div class="file" onclick="loadFile('style.css')">style.css</div>
+                <div class="file" onclick="loadFile('script.js')">script.js</div>
+                <div class="folder" onclick="toggleFolder(this)">assets</div>
+                <div class="file" onclick="loadFile('README.md')">README.md</div>
+            </div>
+        </div>
+        
+        <div class="editor-container">
+            <div class="tabs">
+                <div class="tab active" id="tab-welcome">welcome.md</div>
+            </div>
+            
+            <div class="editor">
+                <div class="line-numbers" id="line-numbers">
+                    1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10
+                </div>
+                <textarea id="code-editor" spellcheck="false" oninput="updateLineNumbers()">
+# Welcome to the VS Code Clone!
+
+This is a simple HTML/CSS/JavaScript implementation that mimics VS Code's interface.
+
+## Features
+- File explorer sidebar
+- Tabs for open files
+- Line numbers
+- Status bar
+- Simple syntax highlighting
+
+Try clicking on different files in the sidebar to see them load in the editor.
+</textarea>
+            </div>
+            
+            <div class="status-bar">
+                <div class="status-left">
+                    <div class="status-item">main</div>
+                    <div class="status-item">UTF-8</div>
+                </div>
+                <div class="status-right">
+                    <div class="status-item">Ln 1, Col 1</div>
+                    <div class="status-item">Spaces: 4</div>
+                    <div class="status-item">Markdown</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const fileContents = {
+            'welcome.md': `# Welcome to the VS Code Clone!
+
+This is a simple HTML/CSS/JavaScript implementation that mimics VS Code's interface.
+
+## Features
+- File explorer sidebar
+- Tabs for open files
+- Line numbers
+- Status bar
+- Simple syntax highlighting
+
+Try clicking on different files in the sidebar to see them load in the editor.`,
+            'index.html': `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Awesome Website</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Hello, World!</h1>
+    <p>This is a sample HTML file.</p>
+    <script src="../js/script.js"></script>
+</body>
+</html>`,
+            'style.css': `body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f0f0f0;
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+}
+
+p {
+    line-height: 1.6;
+    color: #666;
+}`,
+            'script.js': `// This is a comment
+function greet() {
+    const name = "World";
+    console.log("Hello, " + name + "!");
+    
+    // Loop from 1 to 5
+    for (let i = 1; i <= 5; i++) {
+        console.log("Count: " + i);
+    }
+}
+
+// Call the function
+greet();
+
+// Add an event listener
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Page loaded successfully!');
+});`,
+            'README.md': `# Project Documentation
+
+This is a simple example project created for the VS Code Clone interface.
+
+## Getting Started
+1. Clone the repository
+2. Open index.html in your browser
+3. Enjoy!
+
+## File Structure
+- index.html: Main HTML file
+- style.css: Styles for the page
+- script.js: JavaScript functionality
+
+## License
+MIT`
+        };
+        
+        function loadFile(filename) {
+            const content = fileContents[filename] || `// ${filename} content not found`;
+            const editor = document.getElementById('code-editor');
+            editor.value = content;
+            
+            // Create or activate tab
+            const tabId = `tab-${filename}`;
+            let tab = document.getElementById(tabId);
+            
+            if (!tab) {
+                // Create new tab
+                const tabsContainer = document.querySelector('.tabs');
+                tab = document.createElement('div');
+                tab.className = 'tab';
+                tab.id = tabId;
+                tab.textContent = filename;
+                tab.onclick = function() {
+                    activateTab(this);
+                    loadFile(filename);
+                };
+                tabsContainer.appendChild(tab);
+            }
+            
+            activateTab(tab);
+            updateLineNumbers();
+            updateStatusBar(filename);
+        }
+        
+        function activateTab(tabElement) {
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Add active class to the clicked tab
+            tabElement.classList.add('active');
+        }
+        
+        function updateLineNumbers() {
+            const editor = document.getElementById('code-editor');
+            const lineCount = editor.value.split('\n').length;
+            let lineNumbersHtml = '';
+            
+            for (let i = 1; i <= lineCount; i++) {
+                lineNumbersHtml += i + '<br>';
+            }
+            
+            document.getElementById('line-numbers').innerHTML = lineNumbersHtml;
+            
+            // Update cursor position in status bar
+            updateCursorPosition(editor);
+        }
+        
+        function updateCursorPosition(editor) {
+            const cursorPosition = editor.selectionStart;
+            const text = editor.value.substring(0, cursorPosition);
+            const lines = text.split('\n');
+            const lineNumber = lines.length;
+            const columnNumber = lines[lines.length - 1].length + 1;
+            
+            document.querySelector('.status-right .status-item:first-child').textContent = `Ln ${lineNumber}, Col ${columnNumber}`;
+        }
+        
+        function updateStatusBar(filename) {
+            const extension = filename.split('.').pop();
+            let language;
+            
+            switch (extension) {
+                case 'html':
+                    language = 'HTML';
+                    break;
+                case 'css':
+                    language = 'CSS';
+                    break;
+                case 'js':
+                    language = 'JavaScript';
+                    break;
+                case 'md':
+                    language = 'Markdown';
+                    break;
+                default:
+                    language = 'Plain Text';
+            }
+            
+            document.querySelector('.status-right .status-item:last-child').textContent = language;
+        }
+        
+        function toggleFolder(element) {
+            // In a real implementation, this would show/hide child files
+            element.style.fontWeight = element.style.fontWeight === 'bold' ? 'normal' : 'bold';
+        }
+        
+        // Add event listeners for cursor position tracking
+        document.getElementById('code-editor').addEventListener('click', function() {
+            updateCursorPosition(this);
+        });
+        
+        document.getElementById('code-editor').addEventListener('keyup', function() {
+            updateCursorPosition(this);
+        });
+    </script>
+</body>
+</html>

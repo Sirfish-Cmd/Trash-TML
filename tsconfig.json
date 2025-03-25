@@ -2,10 +2,11 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
-    //"outDir": "./", // Output compiled files to a 'dist' folder
+    "outDir": "./public/dist/js",
+    "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true
   },
-  "include": ["./**/*.ts"], // Include all .ts files
+  "include": ["src/ts/**/*.ts"], // Include all .ts files from src/ts
   "exclude": ["node_modules"] // Exclude only node_modules
 }

@@ -1,0 +1,47 @@
+#con {
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+button {
+    font-size: 1.5rem;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: none;
+    background-color: rgb(222, 184, 135);
+    color: whitesmoke;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: hsl(34, 62%, 55%);
+}
+
+button:active {
+    background-color: hsl(34, 62%, 65%);
+}
+
+input {
+    font-size: 2rem;
+    width: 150px;
+    text-align: center;
+    font-weight: bold;
+}
+
+#re {
+    margin: 25px;
+}
+
+#img {
+    display: flex;            /* Use flexbox layout */
+    justify-content: center;  /* Center the images horizontally */
+    flex-wrap: wrap;          /* Wrap the images if there are many */
+}
+
+#img img {
+    width: 150px;
+    margin: 5px;
+}

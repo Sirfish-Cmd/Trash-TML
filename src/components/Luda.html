@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ludo Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+
+        #board {
+            display: grid;
+            grid-template-columns: repeat(15, 40px);
+            grid-template-rows: repeat(15, 40px);
+            gap: 0;
+            margin: 20px auto;
+            border: 2px solid black;
+            width: 600px;
+            height: 600px;
+        }
+
+        .cell {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid black;
+            box-sizing: border-box;
+        }
+
+        .safe {
+            background-color: #a3d977;
+        }
+
+        .home {
+            background-color: #ffcf77;
+        }
+
+        .piece {
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .red {
+            background-color: #ff4d4d;
+        }
+
+        .blue {
+            background-color: #4d94ff;
+        }
+
+        .green {
+            background-color: #4dff4d;
+        }
+
+        .yellow {
+            background-color: #ffd700;
+        }
+
+        #dice-container {
+            margin-top: 20px;
+        }
+
+        #dice {
+            font-size: 40px;
+            font-weight: bold;
+            margin: 10px;
+        }
+
+        button {
+            font-size: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ludo Game</h1>
+    <div id="board"></div>
+    <div id="dice-container">
+        <div id="dice">🎲</div>
+        <button id="roll-dice">Roll Dice</button>
+        <p id="turn">Turn: Player 1 (Red)</p>
+    </div>
+
+    <script>
+        const board = document.getElementById("board");
+        const dice = document.getElementById("dice");
+        const rollDiceButton = document.getElementById("roll-dice");
+        const turnElement = document.getElementById("turn");
+
+        const players = [
+            { name: "Player 1", color: "red", position: 0 },
+            { name: "Player 2", color: "blue", position: 0 },
+            { name: "Player 3", color: "green", position: 0 },
+            { name: "Player 4", color: "yellow", position: 0 }
+        ];
+
+        let currentPlayerIndex = 0;
+
+        // Create the board
+        function createBoard() {
+            for (let i = 0; i < 15 * 15; i++) {
+                const cell = document.createElement("div");
+                cell.classList.add("cell");
+
+                // Mark some cells as "safe zones" or "home" for demo purposes
+                if (i === 0 || i === 14 || i === 210 || i === 224) {
+                    cell.classList.add("home");
+                } else if (i % 28 === 0) {
+                    cell.classList.add("safe");
+                }
+
+                board.appendChild(cell);
+            }
+        }
+
+        // Roll dice and update turn
+        function rollDice() {
+            const diceRoll = Math.floor(Math.random() * 6) + 1;
+            dice.textContent = `🎲 ${diceRoll}`;
+
+            // Update player's position (for now, increment position as a demo)
+            const currentPlayer = players[currentPlayerIndex];
+            currentPlayer.position += diceRoll;
+
+            // Display player's turn
+            turnElement.textContent = `Turn: ${currentPlayer.name} (${currentPlayer.color}) moved to position ${currentPlayer.position}`;
+
+            // Move to the next player
+            currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+            turnElement.textContent += `\nNext Turn: ${players[currentPlayerIndex].name}`;
+        }
+
+        rollDiceButton.addEventListener("click", rollDice);
+
+        createBoard();
+    </script>
+</body>
+</html>

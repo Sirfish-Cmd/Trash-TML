@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>DLLP</title>
+    <link href="../../public/dist/output.css" rel="stylesheet">
+    <style>
+        .split{
+            width: 50%;
+            height: 100%;
+            top:0;
+            text-align: center;
+            font-size: 37px;
+            overflow: hidden;
+        }
+        .split.left{
+            position: absolute;
+            left: 0;
+            background-color: pink;
+            filter: glow(10px);
+            background-image: url(../assets/images/apple.png);
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        .split.right{
+            position: absolute;
+            right: 0;
+            background-color: orange;
+            filter: glow(10px);
+            background-image: url(../assets/images/banana.png);
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        h1{
+            margin-top: 45px;
+            font-size: 100px;
+            -webkit-backdrop-filter: brightness(.5);
+            backdrop-filter: brightness(.5);
+        }
+        .btn{
+            background-color: black;
+            margin-top: 44px;
+            color: white;
+            padding: 20px 40px;
+            border: 4px solid ;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .btn:hover{
+            background-color: white;
+            color: black;
+        }
+        .active-left .left {
+            width: 75%;
+        }
+        .active-left .right {
+            width: 25%;
+        }
+        .active-right .left {
+            width: 25%;
+        }
+        .active-right .right {
+            width: 75%;
+        }
+        .split {
+            transition: width 2s ease-in-out;
+        }
+    </style>
+</head>
+<body class="m-0 flex justify-center h-[100vh] items-center">
+<div class="container">
+    <div class="split left">
+        <h1>🍎</h1>
+        <button class="btn">BUY</button>
+    </div>
+    <div class="split right">
+        <h1>🍌</h1>
+        <button class="btn">BUY</button>
+    </div>
+</div>
+<script src="../js/split-landing.js"></script>
+</body>
+</html>
