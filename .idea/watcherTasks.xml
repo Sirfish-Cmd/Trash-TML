@@ -21,7 +21,7 @@
       <option name="workingDir" value="$PROJECT_DIR$" />
       <envs />
     </TaskOptions>
-    <TaskOptions isEnabled="true">
+    <TaskOptions isEnabled="false">
       <option name="arguments" value="-i ./src/input.css -o ./public/dist/output.css --watch" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" />
