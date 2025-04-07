@@ -2,18 +2,24 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
-    "outDir": "./public/js",
-    "rootDir": "./public",
+    "outDir": "public/js",
+    "rootDir": "public",
     "strict": true,
     "esModuleInterop": true,
     "jsx": "react",
     "moduleResolution": "node"
   },
   "include": [
-    "./public/**/*.ts",
-    "./public/**/*.tsx",
-    "./public/components/**/*.ts",
-    "./public/components/**/*.tsx"
+    "public/**/*.ts",
+    "public/**/*.jsx",
+    "public/**/*.tsx",
+    "public/components/**/*.ts",
+    "public/components/**/*.tsx",
+    "public/styles/**/*.ts",
+    "public/styles/**/*.tsx",
+    "public/ts/**/*.ts",
+    "public/js/**/*.js",
+    "public/react/**/*.jsx"
   ],
   "exclude": ["node_modules"]
 }

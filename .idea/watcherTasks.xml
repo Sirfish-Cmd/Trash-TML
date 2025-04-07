@@ -2,14 +2,14 @@
 <project version="4">
   <component name="ProjectTasksOptions">
     <TaskOptions isEnabled="true">
-      <option name="arguments" value="--target ES6 --outDir ./" />
+      <option name="arguments" value="--target ES6 --outDir ./public/js" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" />
       <option name="exitCodeBehavior" value="ERROR" />
       <option name="fileExtension" value="ts" />
       <option name="immediateSync" value="true" />
       <option name="name" value="TypeScript" />
-      <option name="output" value="C:\Users\origi\Downloads\WEB-TML\Trash-TML\public\ts" />
+      <option name="output" value="C:\Users\origi\Downloads\WEB-TML\Trash-TML\public\js" />
       <option name="outputFilters">
         <array />
       </option>
