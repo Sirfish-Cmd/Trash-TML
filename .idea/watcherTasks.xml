@@ -1,26 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ProjectTasksOptions">
-    <TaskOptions isEnabled="true">
-      <option name="arguments" value="--target ES6 --outDir ./public/js" />
-      <option name="checkSyntaxErrors" value="true" />
-      <option name="description" />
-      <option name="exitCodeBehavior" value="ERROR" />
-      <option name="fileExtension" value="ts" />
-      <option name="immediateSync" value="true" />
-      <option name="name" value="TypeScript" />
-      <option name="output" value="C:\Users\origi\Downloads\WEB-TML\Trash-TML\public\js" />
-      <option name="outputFilters">
-        <array />
-      </option>
-      <option name="outputFromStdout" value="false" />
-      <option name="program" value="$USER_HOME$/AppData/Roaming/npm/tsc" />
-      <option name="runOnExternalChanges" value="true" />
-      <option name="scopeName" value="Project Files" />
-      <option name="trackOnlyRoot" value="false" />
-      <option name="workingDir" value="$PROJECT_DIR$" />
-      <envs />
-    </TaskOptions>
     <TaskOptions isEnabled="false">
       <option name="arguments" value="-i ./src/input.css -o ./public/dist/output.css --watch" />
       <option name="checkSyntaxErrors" value="true" />
@@ -39,6 +19,26 @@
       <option name="scopeName" value="Project Files" />
       <option name="trackOnlyRoot" value="false" />
       <option name="workingDir" value="" />
+      <envs />
+    </TaskOptions>
+    <TaskOptions isEnabled="true">
+      <option name="arguments" value="--outDir C:\Users\origi\Downloads\WEB-TML\Trash-TML\public\js --module commonjs" />
+      <option name="checkSyntaxErrors" value="true" />
+      <option name="description" />
+      <option name="exitCodeBehavior" value="ERROR" />
+      <option name="fileExtension" value="ts" />
+      <option name="immediateSync" value="true" />
+      <option name="name" value="TypeScript" />
+      <option name="output" value="C:\Users\origi\Downloads\WEB-TML\Trash-TML\public\js" />
+      <option name="outputFilters">
+        <array />
+      </option>
+      <option name="outputFromStdout" value="false" />
+      <option name="program" value="tsc" />
+      <option name="runOnExternalChanges" value="true" />
+      <option name="scopeName" value="Project Files" />
+      <option name="trackOnlyRoot" value="false" />
+      <option name="workingDir" value="$PROJECT_DIR$" />
       <envs />
     </TaskOptions>
   </component>
