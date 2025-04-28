@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VTPP</title>
+
+    <!-- Correct Tailwind Output Link -->
+    <link href="/public/dist/output.css" rel="stylesheet">
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        @media (max-width: 991px) {
+            .trailercontainer video {
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body class="m-0 p-0 box-border font-sans bg-black min-h-screen flex justify-center items-center">
+
+<div class="imgcontainer max-w-[550px] p-4 text-center">
+    <img class="w-full rounded-md mb-4" src="https://www.recordnet.com/gcdn/presto/2021/03/22/NRCD/9d9dd9e4-e84a-402e-ba8f-daa659e6e6c5-PhotoWord_003.JPG?width=660&height=425&fit=crop&format=pjpg&auto=webp" alt="Movie Poster">
+
+    <h2 class="text-white text-3xl font-semibold mb-2">MOVIE</h2>
+    <p class="text-white mx-4 mb-4 text-sm leading-relaxed">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos maxime officiis sunt. Alias amet assumenda consequatur distinctio dolorum est eveniet ex exercitationem maxime nesciunt nihil numquam pariatur quaerat, repellat vel.</p>
+
+    <button id="watchBtn" class="bg-white text-black px-6 py-3 rounded-md hover:bg-orange-400 transition-all duration-300">
+        WATCH
+    </button>
+</div>
+
+<div id="trailerContainer" class="fixed inset-0 bg-black bg-opacity-80 hidden flex justify-center items-center z-50">
+    <video class="relative max-w-[900px] outline-none" src="https://videos.pexels.com/video-files/3869112/3869112-sd_640_360_30fps.mp4" controls></video>
+    <i id="closeBtn" class="fas fa-times fa-2x absolute top-8 right-8 text-white cursor-pointer"></i>
+</div>
+
+<script>
+    const watchBtn = document.getElementById('watchBtn');
+    const trailerContainer = document.getElementById('trailerContainer');
+    const closeBtn = document.getElementById('closeBtn');
+
+    watchBtn.addEventListener('click', () => {
+        trailerContainer.classList.remove('hidden');
+    });
+
+    closeBtn.addEventListener('click', () => {
+        trailerContainer.classList.add('hidden');
+    });
+</script>
+
+</body>
+</html>
